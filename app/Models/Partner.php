@@ -18,4 +18,7 @@ class Partner extends Model
     public function shopifyApps(){
         return $this->hasMany(ShopifyApp::class);
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }
