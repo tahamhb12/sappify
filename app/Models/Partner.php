@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Partner extends Model
 {
     use HasFactory;
-    protected $fillable = ["partner_id","name","api_key"];
+    protected $fillable = ["partner_id","name","api_key","user_id"];
 
     protected $table = "partners";
     protected $primaryKey = "partner_id";
