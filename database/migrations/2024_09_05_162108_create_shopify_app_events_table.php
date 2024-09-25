@@ -41,6 +41,7 @@ return new class extends Migration
             $table->foreign('app_id')->references('app_id')->on('shopify_apps');
             $table->string('shop_id');
             $table->foreign('shop_id')->references('shop_id')->on('shops');
+            $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
             $table->timestamps();
         });
     }

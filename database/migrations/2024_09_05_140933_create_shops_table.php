@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('avatarUrl');
             $table->string('name');
             $table->string('myshopifyDomain');
+            $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
             $table->timestamps();
         });
     }

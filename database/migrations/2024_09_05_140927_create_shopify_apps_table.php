@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('api_key');
             $table->string('partner_id');
             $table->foreign('partner_id')->references('partner_id')->on('partners');
+            $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
             $table->timestamps();
         });
     }
