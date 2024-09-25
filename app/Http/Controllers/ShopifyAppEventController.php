@@ -24,7 +24,7 @@ class ShopifyAppEventController extends Controller
     public function Events(){
         $response = $this->apiservices->getEvents("157471866881");
         $shops = Shop::all();
-        $this->responseData = $shops[0]["shop_id"];
+        $this->responseData = $response->json();
         return $this->responseData;
     }
 

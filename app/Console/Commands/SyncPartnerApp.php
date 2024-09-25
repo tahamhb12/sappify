@@ -6,6 +6,7 @@ use App\Models\Partner;
 use App\Models\ShopifyApp;
 use App\Services\ApiServices;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 
 class SyncPartnerApp extends Command
 {
@@ -39,6 +40,9 @@ class SyncPartnerApp extends Command
             $this->error("partner not found");
             return 1;
         }
+        if(!(Auth::check() && Auth::user()->id)){
+            $this->error("user doesnt exist");
+        }
 
 
         $api = new ApiServices($partner);
@@ -55,7 +59,8 @@ class SyncPartnerApp extends Command
             'app_id' => preg_replace('/\D/', '', $appData['app']['id']),
             'name' => $appData['app']['name'],
             'api_key'=> $appData['app']['apiKey'],
-            'partner_id'=> $partnerId
+            'partner_id'=> $partnerId,
+            'user_id'=> $partner->user_id,
         ]);
 
 

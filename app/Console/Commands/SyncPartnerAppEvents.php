@@ -8,6 +8,7 @@ use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
 use App\Services\ApiServices;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Exists;
 use PhpParser\Node\Expr\New_;
 
@@ -61,13 +62,15 @@ class SyncPartnerAppEvents extends Command
                 'shop_id' => $shop_id,
                 "avatarUrl"=>"later",
                 "myshopifyDomain"=>$shopData[$i]["node"]["shop"]["myshopifyDomain"],
-                "name"=>$shopData[$i]["node"]["shop"]["name"]
+                "name"=>$shopData[$i]["node"]["shop"]["name"],
+                "user_id" => $partner->user_id
             ]));
             $event = ShopifyAppEvent::create([
                 'occurred_at' => $eventsData[$i]["node"]["occurredAt"],
                 'type'=> $eventsData[$i]["node"]['type'],
                 'app_id'=> $app->app_id,
-                'shop_id'=> $shop->shop_id
+                'shop_id'=> $shop->shop_id,
+                'user_id' => $partner->user_id ,
             ]);
         }
 
