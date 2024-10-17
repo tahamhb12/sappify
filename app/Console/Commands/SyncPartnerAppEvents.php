@@ -38,7 +38,7 @@ class SyncPartnerAppEvents extends Command
 
         $this->info("Sync AppId $appId in Partner $partnerId");
 
-        $partner = Partner::find( $partnerId)->first();
+        $partner = Partner::where( "partner_id",$partnerId)->first();
         if (!$partner) {
             return $this->error("partner not found");
         }
@@ -63,14 +63,14 @@ class SyncPartnerAppEvents extends Command
                 "avatarUrl"=>"later",
                 "myshopifyDomain"=>$shopData[$i]["node"]["shop"]["myshopifyDomain"],
                 "name"=>$shopData[$i]["node"]["shop"]["name"],
-                "user_id" => $partner->user_id
+                'partner_id'=> $partner->id
             ]));
             $event = ShopifyAppEvent::create([
                 'occurred_at' => $eventsData[$i]["node"]["occurredAt"],
                 'type'=> $eventsData[$i]["node"]['type'],
-                'app_id'=> $app->app_id,
-                'shop_id'=> $shop->shop_id,
-                'user_id' => $partner->user_id ,
+                'app_id'=> $app->id,
+                'shop_id'=> $shop->id,
+                'partner_id'=> $partner->id
             ]);
         }
 

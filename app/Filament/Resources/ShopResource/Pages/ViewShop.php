@@ -4,17 +4,16 @@ namespace App\Filament\Resources\ShopResource\Pages;
 
 use App\Filament\Resources\ShopResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditShop extends EditRecord
+class ViewShop extends ViewRecord
 {
     protected static string $resource = ShopResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
     }
 }

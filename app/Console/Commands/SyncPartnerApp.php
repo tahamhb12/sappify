@@ -40,10 +40,6 @@ class SyncPartnerApp extends Command
             $this->error("partner not found");
             return 1;
         }
-        if(!(Auth::check() && Auth::user()->id)){
-            $this->error("user doesnt exist");
-        }
-
 
         $api = new ApiServices($partner);
 
@@ -59,8 +55,7 @@ class SyncPartnerApp extends Command
             'app_id' => preg_replace('/\D/', '', $appData['app']['id']),
             'name' => $appData['app']['name'],
             'api_key'=> $appData['app']['apiKey'],
-            'partner_id'=> $partnerId,
-            'user_id'=> $partner->user_id,
+            'partner_id'=> $partner->id,
         ]);
 
 

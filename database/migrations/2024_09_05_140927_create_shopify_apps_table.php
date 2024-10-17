@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shopify_apps', function (Blueprint $table) {
-            $table->string('app_id')->primary();
+            $table->id();
+            $table->string('app_id')->unique();
             $table->string('name');
-            $table->string('api_key');
-            $table->string('partner_id');
-            $table->foreign('partner_id')->references('partner_id')->on('partners');
-            $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
+            $table->string('api_key')->unique();
+            $table->foreignId('partner_id')->references('id')->on('partners');
             $table->timestamps();
         });
     }

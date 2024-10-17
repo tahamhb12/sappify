@@ -10,19 +10,15 @@ class ShopifyAppEvent extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["occurred_at","type","app_id","shop_id","user_id"];
+    protected $fillable = ["occurred_at","type","app_id","shop_id","partner_id"];
 
     public function app(){
-        return $this->belongsTo(ShopifyApp::class,"app_id","app_id");
+        return $this->belongsTo(ShopifyApp::class);
     }
-    public function shops(){
-        return $this->hasMany(Shop::class);
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
-    protected static function booted()
-    {
-        static::addGlobalScope(new CheckRole);
+    public function partner(){
+        return $this->belongsTo(Partner::class);
     }
 }

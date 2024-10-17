@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shops', function (Blueprint $table) {
-            $table->string('shop_id')->primary();
+            $table->id();
+            $table->string('shop_id')->unique();
             $table->string('avatarUrl');
             $table->string('name');
             $table->string('myshopifyDomain');
-            $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
+            $table->foreignId("partner_id")->references("id")->on("partners");
             $table->timestamps();
         });
     }

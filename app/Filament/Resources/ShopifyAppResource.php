@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopifyAppResource\Pages;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers;
-use App\Models\Partner;
 use App\Models\ShopifyApp;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
@@ -27,16 +26,11 @@ class ShopifyAppResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $user_partners = Partner::where("user_id", Auth::user()->id)->pluck("partner_id",'partner_id');
         return $form
             ->schema([
                 TextInput::make('app_id')->required(),
                 TextInput::make('name')->required(),
                 TextInput::make('api_key')->required(),
-                Auth::user()->role == "admin"
-                ?Select::make("partner_id")->relationship("partner","partner_id")->label("Partner")->required()
-                :Select::make("partner_id")->options($user_partners)->label("Partner")->required(),
-                Hidden::make("user_id")->default(Auth::user()->id),
             ]);
     }
 

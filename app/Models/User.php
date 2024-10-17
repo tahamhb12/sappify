@@ -8,10 +8,29 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\HasTenants;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasTenants
 {
     use HasFactory, Notifiable;
+
+
+/*     public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class);
+    } */
+
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->partners;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->partners()->whereKey($tenant)->exists();
+    }
 
     public function canAccessPanel(Panel $panel): bool{
         return true ;
@@ -29,7 +48,7 @@ class User extends Authenticatable implements FilamentUser
         "role"
     ];
 
-public function Partner(){
+public function partners(){
     return $this->hasMany(Partner::class);
 }
 public function ShopifyApps(){

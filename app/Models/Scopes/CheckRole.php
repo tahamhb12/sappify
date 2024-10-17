@@ -14,8 +14,8 @@ class CheckRole implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if(Auth::check() && Auth::user()->role !== 'admin') {
-            $builder->where('user_id', Auth::id());
-        }
+        /* if(Auth::check() && Auth::user()->role !== 'admin') {
+            // $builder->where('user_id', Auth::id());
+        } */
     }
 }

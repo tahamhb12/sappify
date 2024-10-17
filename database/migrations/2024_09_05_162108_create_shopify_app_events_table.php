@@ -37,11 +37,9 @@ return new class extends Migration
                 'SUBSCRIPTION_CHARGE_UNFROZEN',
                 'USAGE_CHARGE_APPLIED'
             ]);
-            $table->string('app_id');
-            $table->foreign('app_id')->references('app_id')->on('shopify_apps');
-            $table->string('shop_id');
-            $table->foreign('shop_id')->references('shop_id')->on('shops');
-            $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
+            $table->foreignId('app_id')->references('id')->on('shopify_apps');
+            $table->foreignId('shop_id')->references('id')->on('shops');
+            $table->foreignId("partner_id")->references("id")->on("partners");
             $table->timestamps();
         });
     }

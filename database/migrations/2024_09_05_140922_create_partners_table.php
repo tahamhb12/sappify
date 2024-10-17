@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('partners', function (Blueprint $table) {
-            $table->string("partner_id")->primary();
+            $table->id();
+            $table->string("partner_id")->unique();
             $table->string('name');
-            $table->string('api_key');
+            $table->string('api_key')->unique();
             $table->foreignId('user_id')->constrained("users")->onDelete('cascade');
             $table->timestamps();
         });
