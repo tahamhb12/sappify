@@ -3,8 +3,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopResource\Pages;
 use App\Filament\Resources\ShopResource\RelationManagers;
+use App\Filament\Resources\ShopResource\RelationManagers\AppsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
+use App\Models\Partner;
 use App\Models\Shop;
+use Filament\Facades\Filament;
 use Filament\Tables\Actions\Action; // Correct namespace for table actions
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -40,7 +43,6 @@ class ShopResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('shop_id')->searchable(),
                 TextColumn::make('avatarUrl'),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('myshopifyDomain')->searchable(),
@@ -57,19 +59,24 @@ class ShopResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
 
+
     public static function infolist(Infolist $infolist): Infolist
     {
+        $partner = Filament::getTenant();
+
         return $infolist
         ->schema(components: [
             ComponentsSection::make()->schema([
                 TextEntry::make('avatarUrl'),
-                TextEntry::make('name'),
-                TextEntry::make('myshopifyDomain'),
+                TextEntry::make('name')->label("Store Name"),
+                TextEntry::make('myshopifyDomain')
+                ->label("")
+                ->html()
+                ->formatStateUsing(fn ($state, $record) => '<a href="https://partners.shopify.com/' . $partner->partner_id . '/stores/' . preg_replace('/\D/', '', $record->shop_id) . '" target="_blank" class="text-primary-600 underline">View Store</a>'),
             ])
         ]);
     }
@@ -77,7 +84,8 @@ class ShopResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EventsRelationManager::class
+            EventsRelationManager::class,
+            AppsRelationManager::class
         ];
     }
 

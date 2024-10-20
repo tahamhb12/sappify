@@ -29,7 +29,7 @@ class ShopPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -45,7 +45,7 @@ class ShopPolicy
      */
     public function delete(User $user, Shop $shop): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -53,7 +53,7 @@ class ShopPolicy
      */
     public function restore(User $user, Shop $shop): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -61,6 +61,6 @@ class ShopPolicy
      */
     public function forceDelete(User $user, Shop $shop): bool
     {
-        return true;
+        return false;
     }
 }

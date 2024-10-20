@@ -65,14 +65,18 @@ class SyncPartnerAppEvents extends Command
                 "name"=>$shopData[$i]["node"]["shop"]["name"],
                 'partner_id'=> $partner->id
             ]));
-            $event = ShopifyAppEvent::create([
+            $event = ShopifyAppEvent::firstOrCreate([
                 'occurred_at' => $eventsData[$i]["node"]["occurredAt"],
                 'type'=> $eventsData[$i]["node"]['type'],
                 'app_id'=> $app->id,
                 'shop_id'=> $shop->id,
                 'partner_id'=> $partner->id
             ]);
+            $app = ShopifyApp::find($app->id);    // Replace with the app ID
+            // Assuming $shop and $app are already defined
+            $shop->apps()->syncWithoutDetaching([$app->id]);
         }
+
 
         $this->info($response);
 

@@ -54,9 +54,9 @@ class ShopifyAppEventPolicy
      */
     public function restore(User $user, ShopifyAppEvent $shopifyAppEvent): bool
     {
-        return true;
+        return false;
     }
-
+    
     /**
      * Determine whether the user can permanently delete the model.
      */

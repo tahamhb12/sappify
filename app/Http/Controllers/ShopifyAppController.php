@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partner;
+use App\Models\Shop;
 use App\Models\ShopifyApp;
 use App\Services\ApiServices;
 use GuzzleHttp\Promise\Create;
@@ -24,7 +25,12 @@ class ShopifyAppController extends Controller
     public function App(){
         $response = $this->apiservices->getApp("157471866881");
         $this->responseData = $response->json('data');
-        return $this->responseData;
+        $shop = Shop::find(80);  // Replace with your shop's ID
+        // Get related apps
+        $apps = $shop->apps;
+
+
+        return response()->json($apps);
     }
     public function store(){
         $this->App();

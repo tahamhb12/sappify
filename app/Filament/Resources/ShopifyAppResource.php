@@ -38,7 +38,6 @@ class ShopifyAppResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('app_id')->label("id")->searchable(),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('api_key'),
                 TextColumn::make('partner.name'),

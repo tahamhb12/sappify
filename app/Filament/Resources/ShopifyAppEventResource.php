@@ -100,7 +100,6 @@ class ShopifyAppEventResource extends Resource
 
         return $table
             ->columns([
-                TextColumn::make('id')->searchable()->sortable(),
                 TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
                     return $eventTypeMapping[$state] ?? $state;
@@ -167,7 +166,6 @@ class ShopifyAppEventResource extends Resource
         return $infolist
         ->schema(components: [
             ComponentsSection::make()->schema([
-                TextEntry::make('id'),
                 TextEntry::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
                     return $eventTypeMapping[$state] ?? $state;  // Use simplified labels
