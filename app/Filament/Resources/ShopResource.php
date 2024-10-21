@@ -8,15 +8,20 @@ use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
 use App\Models\Partner;
 use App\Models\Shop;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\FileUpload;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Tables\Actions\Action; // Correct namespace for table actions
 use Filament\Forms;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Infolists\Components\Section as ComponentsSection;
@@ -32,20 +37,25 @@ class ShopResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('shop_id'),
-                TextInput::make('avatarUrl'),
-                TextInput::make('name'),
-                TextInput::make('myshopifyDomain'),
-            ]);
+                Section::make("")->schema([
+                    FileUpload::make('avatarUrl')->disk('public')->directory('images')->label("Avatar"),
+                    TextInput::make('description')->placeholder('Add Description'),
+                    TextInput::make('notes')->placeholder( 'Add Note'),
+                    TagsInput::make('tags')->separator(',')
+                ])
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('avatarUrl'),
+                ImageColumn::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('myshopifyDomain')->searchable(),
+                TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
+                TextColumn::make('notes')->default('No notes'),
+                TextColumn::make('description')->default('No description'),
             ])
             ->filters([
                 //
@@ -71,8 +81,11 @@ class ShopResource extends Resource
         return $infolist
         ->schema(components: [
             ComponentsSection::make()->schema([
-                TextEntry::make('avatarUrl'),
+                ImageEntry::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
                 TextEntry::make('name')->label("Store Name"),
+                TextEntry::make('description')->default('No description'),
+                TextEntry::make('notes')->default('No notes'),
+                TextEntry::make('tags')->default('No Tags Yet')->badge(),
                 TextEntry::make('myshopifyDomain')
                 ->label("")
                 ->html()

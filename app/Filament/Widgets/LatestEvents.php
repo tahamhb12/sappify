@@ -4,9 +4,11 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Resources\Shop\OrderResource;
 use App\Models\Shop\Order;
+use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Squire\Models\Currency;
 use Tables\Columns\TextColumn;
@@ -17,8 +19,15 @@ class LatestEvents extends BaseWidget
 
     protected static ?int $sort = 2;
 
+    use InteractsWithPageFilters;
+    
+    
+    
     public function table(Table $table): Table
     {
+        $selectedApp = $this->filters["App"];
+        $app = ShopifyAppEvent::find($selectedApp);
+
         $eventTypeMapping = [
             'CREDIT_APPLIED' => 'Credit Applied',
             'CREDIT_FAILED' => 'Credit Failed',
@@ -43,14 +52,14 @@ class LatestEvents extends BaseWidget
             'USAGE_CHARGE_APPLIED' => 'Usage Charge Applied',
         ];
         return $table
-            ->query(ShopifyAppEvent::query())
+            ->query(ShopifyAppEvent::query()->when($app, fn($query) => $query->where('app_id', $app->id)))
             ->defaultPaginationPageOption(5)
             ->defaultSort('occurred_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make("id"),
                 Tables\Columns\TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;  // Use simplified labels
+                    return $eventTypeMapping[$state] ?? $state; 
                 }),
                 Tables\Columns\TextColumn::make("app.name"),
                 Tables\Columns\TextColumn::make("shop.name"),

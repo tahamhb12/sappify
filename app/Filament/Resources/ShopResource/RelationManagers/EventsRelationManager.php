@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -62,7 +63,9 @@ class EventsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('occurred_at')->date(),
             ])
             ->filters([
-                //
+                SelectFilter::make("type")
+                ->options($eventTypeMapping)
+                ->multiple(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

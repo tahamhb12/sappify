@@ -57,10 +57,11 @@ class SyncPartnerAppEvents extends Command
         for($i = 0; $i < count($eventsData); $i++){
 
             $shop_id = $shopData[$i]["node"]["shop"]["id"];
+            $shop_avatar = $shopData[$i]["node"]["shop"]["avatarUrl"];
 
             $shop =  Shop::firstOrCreate(([
                 'shop_id' => $shop_id,
-                "avatarUrl"=>"later",
+                "avatarUrl"=> $shop_avatar,
                 "myshopifyDomain"=>$shopData[$i]["node"]["shop"]["myshopifyDomain"],
                 "name"=>$shopData[$i]["node"]["shop"]["name"],
                 'partner_id'=> $partner->id

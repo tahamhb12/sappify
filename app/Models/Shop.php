@@ -11,7 +11,7 @@ class Shop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["shop_id","avatarUrl","name","myshopifyDomain","partner_id"];
+    protected $fillable = ["shop_id","avatarUrl","name","myshopifyDomain","partner_id","tags","notes","description"];
 
     protected $table = 'shops';
 
