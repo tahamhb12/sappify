@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
             $table->string('shop_id')->unique();
-            $table->string('avatarUrl');
+            $table->string('avatarUrl')->nullable();
             $table->string('name');
             $table->string('myshopifyDomain');
+            $table->string('tags')->nullable();
+            $table->string('notes')->nullable();
+            $table->string('description')->nullable();
             $table->foreignId("partner_id")->references("id")->on("partners");
             $table->timestamps();
         });
