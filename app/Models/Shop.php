@@ -11,7 +11,7 @@ class Shop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["shop_id","avatarUrl","name","myshopifyDomain","partner_id","tags","notes","description"];
+    protected $fillable = ["shop_id","avatarUrl","name","myshopifyDomain","partner_id","tags","notes","description","status","company_id"];
 
     protected $table = 'shops';
 
@@ -23,6 +23,9 @@ class Shop extends Model
     }
     public function partner(){
         return $this->belongsTo(Partner::class);
+    }
+    public function company(){
+        return $this->belongsTo(Company::class);
     }
 
 }
