@@ -6,6 +6,8 @@ use App\Models\Partner;
 use App\Models\Shop;
 use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
+use App\Models\TransactionEvent;
+use App\Models\TransactionEvents;
 use App\Services\ApiServices;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +55,13 @@ class SyncPartnerAppEvents extends Command
         $eventsData = $response->json("data.app.events.edges");
         $shopData = $response->json("data.app.events.edges");
 
+        $appEvents = [
+            'RELATIONSHIP_DEACTIVATED',
+            'RELATIONSHIP_INSTALLED',
+            'RELATIONSHIP_REACTIVATED',
+            'RELATIONSHIP_UNINSTALLED',
+        ];
+
         if($eventsData){
             for($i = 0; $i < count($eventsData); $i++){
 
@@ -66,13 +75,23 @@ class SyncPartnerAppEvents extends Command
                     "name"=>$shopData[$i]["node"]["shop"]["name"],
                     'partner_id'=> $partner->id
                 ]));
-                $event = ShopifyAppEvent::firstOrCreate([
-                    'occurred_at' => $eventsData[$i]["node"]["occurredAt"],
-                    'type'=> $eventsData[$i]["node"]['type'],
-                    'app_id'=> $app->id,
-                    'shop_id'=> $shop->id,
-                    'partner_id'=> $partner->id
-                ]);
+                    if(in_array($eventsData[$i]["node"]['type'],$appEvents)){
+                        $event = ShopifyAppEvent::firstOrCreate([
+                            'occurred_at' => $eventsData[$i]["node"]["occurredAt"],
+                            'type'=> $eventsData[$i]["node"]['type'],
+                            'app_id'=> $app->id,
+                            'shop_id'=> $shop->id,
+                            'partner_id'=> $partner->id
+                        ]);
+                    }else{
+                        $event = TransactionEvent::firstOrCreate([
+                            'occurred_at' => $eventsData[$i]["node"]["occurredAt"],
+                            'type'=> $eventsData[$i]["node"]['type'],
+                            'app_id'=> $app->id,
+                            'shop_id'=> $shop->id,
+                            'partner_id'=> $partner->id
+                        ]);
+                    }
                 $app = ShopifyApp::find($app->id);    // Replace with the app ID
                 // Assuming $shop and $app are already defined
                 $shop->apps()->syncWithoutDetaching([$app->id]);

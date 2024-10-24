@@ -5,6 +5,7 @@ use App\Filament\Resources\ShopResource\Pages;
 use App\Filament\Resources\ShopResource\RelationManagers;
 use App\Filament\Resources\ShopResource\RelationManagers\AppsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
+use App\Filament\Resources\ShopResource\RelationManagers\TransactionEventsRelationManager;
 use App\Models\Partner;
 use App\Models\Shop;
 use App\Models\ShopifyAppEvent;
@@ -35,6 +36,8 @@ class ShopResource extends Resource
     protected static ?string $model = Shop::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+    protected static ?int $navigationSort = 3;
+
 
     public static function form(Form $form): Form
     {
@@ -158,7 +161,8 @@ class ShopResource extends Resource
     {
         return [
             EventsRelationManager::class,
-            AppsRelationManager::class
+            AppsRelationManager::class,
+            TransactionEventsRelationManager::class
         ];
     }
 

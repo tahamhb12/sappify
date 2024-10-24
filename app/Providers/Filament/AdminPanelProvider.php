@@ -4,11 +4,13 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Tenancy\EditPartnerProfile;
 use App\Filament\Pages\Tenancy\RegisterPartner;
+use App\Filament\Resources\ShopifyAppResource;
 use App\Models\Partner;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
+use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;

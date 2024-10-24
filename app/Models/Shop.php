@@ -18,8 +18,11 @@ class Shop extends Model
     public function apps(){
         return $this->belongsToMany(ShopifyApp::class,'app_shop', 'shop_id', 'app_id');
     }
-    public function events(){
+    public function Appevents(){
         return $this->hasMany(ShopifyAppEvent::class);
+    }
+    public function transactionEvents(){
+        return $this->hasMany(TransactionEvent::class);
     }
     public function partner(){
         return $this->belongsTo(Partner::class);

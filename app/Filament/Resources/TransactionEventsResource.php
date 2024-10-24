@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ShopifyAppEventResource\Pages;
-use App\Filament\Resources\ShopifyAppEventResource\RelationManagers;
-use App\Models\Shop;
+use App\Filament\Resources\TransactionEventsResource\Pages;
+use App\Filament\Resources\TransactionEventsResource\RelationManagers;
 use App\Models\ShopifyApp;
-use App\Models\ShopifyAppEvent;
-use Filament\Forms;
+use App\Models\TransactionEvent;
+use App\Models\TransactionEvents;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -28,18 +27,25 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Filters\DateFilter;
 
 
-class ShopifyAppEventResource extends Resource
+class TransactionEventsResource extends Resource
 {
-    protected static ?string $model = ShopifyAppEvent::class;
+    protected static ?string $model = TransactionEvent::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Events";
-
-    protected static ?string $modelLabel = 'App Events';
 
 
     public static function form(Form $form): Form
     {
+        return $form
+            ->schema([
+                //
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+
         $eventTypeMapping = [
             'CREDIT_APPLIED' => 'Credit Applied',
             'CREDIT_FAILED' => 'Credit Failed',
@@ -48,10 +54,6 @@ class ShopifyAppEventResource extends Resource
             'ONE_TIME_CHARGE_ACTIVATED' => 'One-Time Charge Activated',
             'ONE_TIME_CHARGE_DECLINED' => 'One-Time Charge Declined',
             'ONE_TIME_CHARGE_EXPIRED' => 'One-Time Charge Expired',
-            'RELATIONSHIP_DEACTIVATED' => 'App Deactivated',
-            'RELATIONSHIP_INSTALLED' => 'App Installed',
-            'RELATIONSHIP_REACTIVATED' => 'App Reactivated',
-            'RELATIONSHIP_UNINSTALLED' => 'App Uninstalled',
             'SUBSCRIPTION_APPROACHING_CAPPED_AMOUNT' => 'Subscription Approaching Cap',
             'SUBSCRIPTION_CAPPED_AMOUNT_UPDATED' => 'Subscription Cap Updated',
             'SUBSCRIPTION_CHARGE_ACCEPTED' => 'Subscription Charge Accepted',
@@ -62,25 +64,6 @@ class ShopifyAppEventResource extends Resource
             'SUBSCRIPTION_CHARGE_FROZEN' => 'Subscription Frozen',
             'SUBSCRIPTION_CHARGE_UNFROZEN' => 'Subscription Unfrozen',
             'USAGE_CHARGE_APPLIED' => 'Usage Charge Applied',
-        ];
-
-        return $form
-            ->schema([
-                Select::make('app_id')->relationship("app","app_id"),
-                Select::make('shop_id')->relationship("shops","shop_id"),
-                Select::make('type')->options($eventTypeMapping),
-                TextInput::make('occurred_at'),
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-
-        $eventTypeMapping = [
-            'RELATIONSHIP_DEACTIVATED' => 'App Deactivated',
-            'RELATIONSHIP_INSTALLED' => 'App Installed',
-            'RELATIONSHIP_REACTIVATED' => 'App Reactivated',
-            'RELATIONSHIP_UNINSTALLED' => 'App Uninstalled',
         ];
 
         return $table
@@ -133,10 +116,6 @@ class ShopifyAppEventResource extends Resource
             'ONE_TIME_CHARGE_ACTIVATED' => 'One-Time Charge Activated',
             'ONE_TIME_CHARGE_DECLINED' => 'One-Time Charge Declined',
             'ONE_TIME_CHARGE_EXPIRED' => 'One-Time Charge Expired',
-            'RELATIONSHIP_DEACTIVATED' => 'App Deactivated',
-            'RELATIONSHIP_INSTALLED' => 'App Installed',
-            'RELATIONSHIP_REACTIVATED' => 'App Reactivated',
-            'RELATIONSHIP_UNINSTALLED' => 'App Uninstalled',
             'SUBSCRIPTION_APPROACHING_CAPPED_AMOUNT' => 'Subscription Approaching Cap',
             'SUBSCRIPTION_CAPPED_AMOUNT_UPDATED' => 'Subscription Cap Updated',
             'SUBSCRIPTION_CHARGE_ACCEPTED' => 'Subscription Charge Accepted',
@@ -161,7 +140,6 @@ class ShopifyAppEventResource extends Resource
             )
         ]);
      }
-
     public static function getRelations(): array
     {
         return [
@@ -172,10 +150,10 @@ class ShopifyAppEventResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListShopifyAppEvents::route('/'),
-            'view' => Pages\ViewShopifyAppEvent::route('/{record}'),
-            'create' => Pages\CreateShopifyAppEvent::route('/create'),
-            'edit' => Pages\EditShopifyAppEvent::route('/{record}/edit'),
+            'index' => Pages\ListTransactionEvents::route('/'),
+            'create' => Pages\CreateTransactionEvents::route('/create'),
+            'view' => Pages\ViewTransactionEvents::route('/{record}'),
+            'edit' => Pages\EditTransactionEvents::route('/{record}/edit'),
         ];
     }
 }

@@ -4,6 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopifyAppResource\Pages;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers;
+use App\Filament\Resources\ShopifyAppResource\RelationManagers\AppEventsRelationManager;
+use App\Filament\Resources\ShopifyAppResource\RelationManagers\EventsRelationManager as RelationManagersEventsRelationManager;
+use App\Filament\Resources\ShopifyAppResource\RelationManagers\ShopsRelationManager;
+use App\Filament\Resources\ShopifyAppResource\RelationManagers\TransactionEventsRelationManager;
+use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
 use App\Models\ShopifyApp;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
@@ -23,6 +28,9 @@ class ShopifyAppResource extends Resource
     protected static ?string $model = ShopifyApp::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 1;
+
+
 
     public static function form(Form $form): Form
     {
@@ -100,7 +108,9 @@ class ShopifyAppResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AppEventsRelationManager::class,
+            ShopsRelationManager::class,
+            TransactionEventsRelationManager::class
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ShopResource\RelationManagers;
+namespace App\Filament\Resources\ShopifyAppResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +11,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventsRelationManager extends RelationManager
+class AppEventsRelationManager extends RelationManager
 {
     protected static string $relationship = 'AppEvents';
 
@@ -39,7 +39,7 @@ class EventsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;  // Use simplified labels
+                    return $eventTypeMapping[$state] ?? $state;
                 }),
                 Tables\Columns\TextColumn::make('app.name'),
                 Tables\Columns\TextColumn::make('shop.name'),
@@ -54,12 +54,9 @@ class EventsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
