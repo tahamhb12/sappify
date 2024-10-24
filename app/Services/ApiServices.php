@@ -14,7 +14,6 @@ class ApiServices
     {
         $this->apiUrl = 'https://partners.shopify.com/' . $partner->partner_id . '/api/' . $version . '/graphql.json';
         $this->accessToken = $partner->api_key;
-
     }
     public function getData($query)
     {
@@ -57,5 +56,19 @@ class ApiServices
                 }
             }
             }');
+    }
+
+    public function checkPartner(){
+        return $this->getData(
+            '{
+                transactions(first: 20) {
+                    edges {
+                    node {
+                        id
+                        createdAt
+                    }
+                    }
+                }
+                }');
     }
 }

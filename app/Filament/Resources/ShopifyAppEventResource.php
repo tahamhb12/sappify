@@ -105,8 +105,8 @@ class ShopifyAppEventResource extends Resource
                     return $eventTypeMapping[$state] ?? $state;
                 })
                 ->searchable(),
-                TextColumn::make('app.name'),
-                TextColumn::make('shop.name'),
+                TextColumn::make('app.name')->searchable(),
+                TextColumn::make('shop.name')->searchable(),
                 TextColumn::make('occurred_at')->date()->sortable(),
             ])
             ->filters([

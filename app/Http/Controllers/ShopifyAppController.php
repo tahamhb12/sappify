@@ -23,14 +23,14 @@ class ShopifyAppController extends Controller
     }
 
     public function App(){
-        $response = $this->apiservices->getApp("157471866881");
+        $response = $this->apiservices->checkPartner();
         $this->responseData = $response->json('data');
-        $shop = Shop::find(80);  // Replace with your shop's ID
+/*         $shop = Shop::find(80);  // Replace with your shop's ID
         // Get related apps
-        $apps = $shop->apps;
+        $apps = $shop->apps; */
 
 
-        return response()->json($apps);
+        return response()->json($this->responseData);
     }
     public function store(){
         $this->App();

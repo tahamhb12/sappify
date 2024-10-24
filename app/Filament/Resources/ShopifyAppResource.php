@@ -68,10 +68,10 @@ class ShopifyAppResource extends Resource
                         'W' => '#FFAC33', // Apricot
                         'X' => '#33FF99', // Light Sea Green
                         'Y' => '#FFD700', // Golden Yellow
-                        'Z' => '#FF45F0', // Neon Pink   
+                        'Z' => '#FF45F0', // Neon Pink
                     ];
-                    $bgColor = $colorMapping[$name]; 
-        
+                    $bgColor = $colorMapping[$name];
+
                     return "<div style='display: flex; align-items: center;'>
                                 <div style='display:flex; justify-content:center; align-items:center; margin-left:-5px; width: 33px; height: 33px; border-radius: 8px; background-color: $bgColor; color: white; font-weight: bold; margin-right: 8px;'>
                                     $name

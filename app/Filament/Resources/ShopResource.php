@@ -7,15 +7,18 @@ use App\Filament\Resources\ShopResource\RelationManagers\AppsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
 use App\Models\Partner;
 use App\Models\Shop;
+use App\Models\ShopifyAppEvent;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Tables\Actions\Action; // Correct namespace for table actions
 use Filament\Forms;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Group as ComponentsGroup;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -51,12 +54,42 @@ class ShopResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('myshopifyDomain')->searchable(),
+                TextColumn::make('name')
+                ->label('App')
+                ->formatStateUsing(function ($state,$record) {
+                    return "<div>
+                                <div style=font-weight:bold>
+                                $state
+                                </div>
+                                <div style=font-size:13px>$record->myshopifyDomain</div>
+                            </div>";
+                })
+                ->html()
+                ->searchable(),
                 TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
                 TextColumn::make('notes')->default('No notes'),
                 TextColumn::make('description')->default('No description'),
-            ])
+                TextColumn::make('status')->default(function ($record) {
+                    $type = ShopifyAppEvent::where('shop_id', $record->id)
+                        ->where(function ($query) {
+                            $query->where('type', 'RELATIONSHIP_INSTALLED')
+                                ->orWhere('type', 'RELATIONSHIP_UNINSTALLED');
+                        })
+                        ->orderBy('occurred_at', 'desc')
+                        ->first()
+                        ?->type ?? 'N/A';
+                    if ($type === 'RELATIONSHIP_INSTALLED') {
+                        return 'Installed';
+                    } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
+                        return 'Uninstalled';
+                    }
+                    return 'N/A';
+                })->badge()
+                ->color(function (string $state){
+                    if($state=='Uninstalled') return 'danger';
+                    return 'success';
+                }),
+           ])
             ->filters([
                 //
             ])
@@ -65,7 +98,7 @@ class ShopResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Action::make('visitLink')
                     ->label('Visit')
-                    ->url(fn ($record) => 'https://'.$record->myshopifyDomain)
+                    ->url(fn ($record) => 'https://'.$record->myshopifyDomain)->openUrlInNewTab()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -80,18 +113,45 @@ class ShopResource extends Resource
 
         return $infolist
         ->schema(components: [
-            ComponentsSection::make()->schema([
-                ImageEntry::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
-                TextEntry::make('name')->label("Store Name"),
-                TextEntry::make('description')->default('No description'),
-                TextEntry::make('notes')->default('No notes'),
-                TextEntry::make('tags')->default('No Tags Yet')->badge(),
-                TextEntry::make('myshopifyDomain')
-                ->label("")
-                ->html()
-                ->formatStateUsing(fn ($state, $record) => '<a href="https://partners.shopify.com/' . $partner->partner_id . '/stores/' . preg_replace('/\D/', '', $record->shop_id) . '" target="_blank" class="text-primary-600 underline">View Store</a>'),
-            ])
-        ]);
+                ComponentsGroup::make()->schema([
+                    ComponentsSection::make('Image')->schema([
+                        ImageEntry::make('avatarUrl')->default('images/shop.png')->label("Avatar")
+                        ->alignCenter()
+                    ])->collapsible(),
+                    ComponentsSection::make()->schema([
+                        TextEntry::make('name')->label("Store Name"),
+                    ]),
+                ]),
+                ComponentsSection::make()->schema([
+                    TextEntry::make('description')->default('No description'),
+                    TextEntry::make('notes')->default('No notes'),
+                    TextEntry::make('tags')->default('No Tags Yet')->badge(),
+                    TextEntry::make('status')->default(function ($record) {
+                        $type = ShopifyAppEvent::where('shop_id', $record->id)
+                            ->where(function ($query) {
+                            $query->where('type', 'RELATIONSHIP_INSTALLED')
+                                ->orWhere('type', 'RELATIONSHIP_UNINSTALLED');
+                            })
+                            ->orderBy('occurred_at', 'desc')
+                            ->first()
+                            ?->type ?? 'N/A';
+                        if ($type === 'RELATIONSHIP_INSTALLED') {
+                            return 'Installed';
+                        } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
+                            return 'Uninstalled';
+                        }
+                        return 'N/A';
+                        })->badge()
+                        ->color(function (string $state){
+                            if($state=='Uninstalled') return 'danger';
+                            return 'success';
+                        }),
+                        TextEntry::make('myshopifyDomain')
+                        ->label("")
+                        ->html()
+                        ->formatStateUsing(fn ($state, $record) => '<a href="https://partners.shopify.com/' . $partner->partner_id . '/stores/' . preg_replace('/\D/', '', $record->shop_id) . '" target="_blank" class="text-primary-600 underline">View Store</a>'),
+                ])->columnSpan(3)
+        ])->columns(4);
     }
 
     public static function getRelations(): array

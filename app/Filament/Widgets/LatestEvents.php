@@ -6,6 +6,7 @@ use App\Filament\Resources\Shop\OrderResource;
 use App\Models\Shop\Order;
 use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
+use Filament\Facades\Filament;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -20,9 +21,9 @@ class LatestEvents extends BaseWidget
     protected static ?int $sort = 2;
 
     use InteractsWithPageFilters;
-    
-    
-    
+
+
+
     public function table(Table $table): Table
     {
         $selectedApp = $this->filters["App"];
@@ -51,15 +52,18 @@ class LatestEvents extends BaseWidget
             'SUBSCRIPTION_CHARGE_UNFROZEN' => 'Subscription Unfrozen',
             'USAGE_CHARGE_APPLIED' => 'Usage Charge Applied',
         ];
+        $partner = Filament::getTenant();
         return $table
-            ->query(ShopifyAppEvent::query()->when($app, fn($query) => $query->where('app_id', $app->id)))
+            ->query(ShopifyAppEvent::query()->when($app, fn($query) => $query->where('app_id', $app->id))
+            ->when($partner, fn($query) => $query->where('partner_id', $partner->id))
+            )
             ->defaultPaginationPageOption(5)
             ->defaultSort('occurred_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make("id"),
                 Tables\Columns\TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state; 
+                    return $eventTypeMapping[$state] ?? $state;
                 }),
                 Tables\Columns\TextColumn::make("app.name"),
                 Tables\Columns\TextColumn::make("shop.name"),
