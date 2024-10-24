@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('tags')->nullable();
             $table->string('notes')->nullable();
             $table->string('description')->nullable();
+            $table->string('status')->nullable();
             $table->foreignId("partner_id")->references("id")->on("partners");
+            $table->foreignId('company_id')->nullable()->references('id')->on('companies');
             $table->timestamps();
         });
     }
