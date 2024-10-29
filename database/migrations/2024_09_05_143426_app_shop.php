@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('app_shop', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('app_id')->references('id')->on('shopify_apps');
-            $table->foreignId('shop_id')->references('id')->on('shops');
+            $table->foreignId('app_id')->references('id')->on('shopify_apps')->cascadeOnDelete();
+            $table->foreignId('shop_id')->references('id')->on('shops')->cascadeOnDelete();
             $table->timestamps();
         });
 

@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('app_id')->unique();
             $table->string('name');
             $table->string('api_key')->unique();
+            $table->string('url')->nullable();
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
+            $table->string('image')->nullable();
             $table->foreignId('partner_id')->references('id')->on('partners');
             $table->timestamps();
         });
