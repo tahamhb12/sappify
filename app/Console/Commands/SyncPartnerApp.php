@@ -32,8 +32,8 @@ class SyncPartnerApp extends Command
         $partnerId = intval($this->argument('partnerId'));
         $appId = intval($this->argument('appId'));
 
-        $this->info(string: "Sync AppId $appId in Partner $partnerId");
-
+/*         $this->info(string: "Sync AppId $appId in Partner $partnerId");
+ */
         $partner = Partner::where("partner_id",$partnerId)->first();
 
         if (!$partner) {
@@ -49,15 +49,10 @@ class SyncPartnerApp extends Command
 
         $appData = $response->json('data');
 
-        $this->info($response);
-
-        $app = ShopifyApp::create([
-            'app_id' => preg_replace('/\D/', '', $appData['app']['id']),
-            'name' => $appData['app']['name'],
-            'api_key'=> $appData['app']['apiKey'],
-            'partner_id'=> $partner->id,
-        ]);
-
-
+        if($appData && $appData['app']!==null){
+            $this->info($appData['app']['apiKey']);
+        }else{
+            return 1;
+        }
     }
 }

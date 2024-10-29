@@ -11,7 +11,7 @@ class ShopifyApp extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["app_id","name","api_key","partner_id"];
+    protected $fillable = ["app_id","name","api_key","partner_id",'url',"title","description",'image'];
 
     protected $table = 'shopify_apps';
 

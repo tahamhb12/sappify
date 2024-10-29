@@ -8,6 +8,7 @@ use App\Models\ShopifyApp;
 use App\Services\ApiServices;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 
 
@@ -23,15 +24,18 @@ class ShopifyAppController extends Controller
     }
 
     public function App(){
-        $response = $this->apiservices->checkPartner();
-        $this->responseData = $response->json('data');
+
 /*         $shop = Shop::find(80);  // Replace with your shop's ID
         // Get related apps
         $apps = $shop->apps; */
-
-
-        return response()->json($this->responseData);
-    }
+        $cmd1 = Artisan::call('app:sync-partner-app', [
+            'partnerId' => '3449862',
+            'appId' => '145227776001',
+        ]);
+        $apiKey = trim(Artisan::output());
+        return $apiKey;
+/*         return response()->json($this->responseData);
+ */    }
     public function store(){
         $this->App();
         $appData = $this->responseData;

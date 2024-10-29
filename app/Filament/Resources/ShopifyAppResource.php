@@ -11,12 +11,14 @@ use App\Filament\Resources\ShopifyAppResource\RelationManagers\TransactionEvents
 use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
 use App\Models\ShopifyApp;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,9 +38,12 @@ class ShopifyAppResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('app_id')->required(),
+                TextInput::make('app_id')->required()->readOnlyOn('edit')->unique(ignoreRecord:true),
                 TextInput::make('name')->required(),
-                TextInput::make('api_key')->required(),
+                TextInput::make('api_key')->required()->readOnlyon('edit')->unique(ignoreRecord:true),
+                TextInput::make('title')->visibleOn('edit'),
+                TextInput::make('description')->visibleOn('edit'),
+                TextInput::make('url'),
             ]);
     }
 
@@ -48,7 +53,7 @@ class ShopifyAppResource extends Resource
             ->columns([
                 TextColumn::make('name')
                 ->label('App')
-                ->formatStateUsing(function ($state) {
+                ->formatStateUsing(function ($state,$record) {
                     $name = strtoupper(substr($state, 0, 1));
                     $colorMapping = [
                         'A' => '#FF5733', // Red-Orange
@@ -80,17 +85,31 @@ class ShopifyAppResource extends Resource
                     ];
                     $bgColor = $colorMapping[$name];
 
-                    return "<div style='display: flex; align-items: center;'>
+                    return $record->image   ?  
+                    "<div style='display: flex; align-items: center;'>
+                    <div style='display:flex; justify-content:center; align-items:center; margin-left:-5px; width: 33px; height: 33px; border-radius: 8px; color: white; font-weight: bold; margin-right: 8px;'>
+                        <img src=$record->image>
+                    </div>
+                    <p style='display:flex; flex-direction: column;'>
+                        $state
+                        <span style='font-size:13px'>$record->title</span>
+                    </p>
+                </div>"
+                    :
+                            "<div style='display: flex; align-items: center;'>
                                 <div style='display:flex; justify-content:center; align-items:center; margin-left:-5px; width: 33px; height: 33px; border-radius: 8px; background-color: $bgColor; color: white; font-weight: bold; margin-right: 8px;'>
                                     $name
                                 </div>
-                                <span>$state</span>
+                                <p style='display:flex; flex-direction: column;'>
+                                    $state
+                                    <span style='font-size:13px'>$record->title</span>
+                                </p>
                             </div>";
                 })
                 ->html()
                 ->searchable(),
                 TextColumn::make('api_key'),
-                TextColumn::make('partner.name'),
+                TextColumn::make('description')->default('No Description')->width(20),
             ])
             ->filters([
                 //
