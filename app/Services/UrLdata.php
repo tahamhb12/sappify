@@ -24,15 +24,15 @@ class UrLdata
         preg_match_all('/<title>(.*?)<\/title>|<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/', $body, $matches);
         $title = $matches[1][0] ?? 'No title found';
         $jsonLdData = array_filter(array_map('json_decode', $matches[2]));
-        
+
         $image = null;
         $description = null;
         foreach ($jsonLdData as $data) {
             if (isset($data->image)) {
-                $image = $data->image; 
+                $image = $data->image;
             }
             if (isset($data->description)) {
-                $description = $data->description; 
+                $description = $data->description;
             }
         }
         $data = [
@@ -40,7 +40,7 @@ class UrLdata
             'image' => $image[0],
             'description' => $description,
         ];
-        
+
         return $data;
     }
 }

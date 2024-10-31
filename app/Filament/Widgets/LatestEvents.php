@@ -27,7 +27,6 @@ class LatestEvents extends BaseWidget
     public function table(Table $table): Table
     {
         $selectedApp = $this->filters["App"];
-        $app = ShopifyAppEvent::find($selectedApp);
 
         $eventTypeMapping = [
             'CREDIT_APPLIED' => 'Credit Applied',
@@ -54,7 +53,7 @@ class LatestEvents extends BaseWidget
         ];
         $partner = Filament::getTenant();
         return $table
-            ->query(ShopifyAppEvent::query()->when($app, fn($query) => $query->where('app_id', $app->id))
+            ->query(ShopifyAppEvent::query()->when($selectedApp, fn($query) => $query->where('app_id', $selectedApp))
             ->when($partner, fn($query) => $query->where('partner_id', $partner->id))
             )
             ->defaultPaginationPageOption(5)

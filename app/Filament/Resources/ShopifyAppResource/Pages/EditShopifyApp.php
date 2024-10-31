@@ -31,4 +31,11 @@ class EditShopifyApp extends EditRecord
             ->send();
         }
     }
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\ViewAction::make(),
+            Actions\DeleteAction::make(),
+        ];
+    }
 }

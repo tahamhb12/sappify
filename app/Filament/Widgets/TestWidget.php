@@ -19,7 +19,6 @@ class TestWidget extends BaseWidget
         $startDate = $this->filters['StartDate'];
         $endDate = $this->filters['EndDate'];
         $selectedApp = $this->filters["App"];
-        $app = ShopifyApp::find($selectedApp);
         $user_role = auth()->user()->role;
         return [
             $user_role == "admin" ? Stat::make("Users",User::count())
@@ -30,14 +29,13 @@ class TestWidget extends BaseWidget
             ->description("Existed Shopify Apps")
             ->chart([1,3,5,10,20,40]),
             Stat::make("Events", ShopifyAppEvent::query()
-            ->when($app, fn($query) => $query->where('app_id', $app->id))
+            ->when($selectedApp, fn($query) => $query->where('app_id', $selectedApp))
             ->when($partner, fn($query) => $query->where('partner_id', $partner->id))
             ->when($startDate, fn($query) => $query->whereDate('occurred_at', '>=', $startDate))
             ->when($endDate, fn($query) => $query->whereDate('occurred_at', '<=', $endDate))
             ->count())
             ->description("Shopify Events")
             ->chart([1, 3, 5, 10, 20, 40])
-
         ];
     }
 }

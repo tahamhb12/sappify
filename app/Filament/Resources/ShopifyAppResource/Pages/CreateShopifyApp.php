@@ -17,40 +17,43 @@ class CreateShopifyApp extends CreateRecord
     protected static string $resource = ShopifyAppResource::class;
 
 
-    protected function beforeCreate(): void
+    protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
         $partnerId = Filament::getTenant()->partner_id;
-        $appId = $this->form->getState()['app_id'];
+        $appId = $data['app_id'];
 
         $getApp = Artisan::call('app:sync-partner-app', [
             'partnerId' => $partnerId,
             'appId' => $appId,
         ]);
         $apiKey = trim(Artisan::output());
-        $cmd = Artisan::call('app:sync-partner-app-events', [
+
+        if ($getApp == 1) {
+            Notification::make()
+                ->title('Failed to sync the app. App info incorrect')
+                ->danger()
+                ->send();
+            $this->halt();
+        } elseif ($data['api_key'] !== $apiKey) {
+            Notification::make()
+                ->title('Failed to sync the app. API key incorrect.')
+                ->danger()
+                ->send();
+            $this->halt();
+        }
+
+        $record = parent::handleRecordCreation($data);
+        Notification::make()
+            ->title('App and events synced and created successfully.')
+            ->success()
+            ->send();
+        Artisan::queue('app:sync-partner-app-events', [
             'partnerId' => $partnerId,
             'appId' => $appId,
         ]);
-        if($cmd == 1) {
-            Notification::make()
-            ->title('Failed to sync the app. App info incorrect')
-            ->danger()
-            ->send();
-            // stop the creation process
-            $this->halt();
-        }else if($this->form->getState()['api_key']!==$apiKey){
-            Notification::make()
-                ->title('Failed to sync the app. Api key incorrect.')
-                ->danger()
-                ->send();
-            $this->halt(); 
-        }else{
-            Notification::make()
-                ->title('App and events synced and created successfully.')
-                ->success()
-                ->send();
-        }
+        return $record;
     }
+
     protected function afterCreate(): void
     {
         $urldata = new UrLdata();

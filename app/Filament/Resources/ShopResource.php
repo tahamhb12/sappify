@@ -45,9 +45,10 @@ class ShopResource extends Resource
             ->schema([
                 Section::make("")->schema([
                     FileUpload::make('avatarUrl')->disk('public')->directory('images')->label("Avatar"),
+                    TextInput::make('title')->placeholder('Add title'),
                     TextInput::make('description')->placeholder('Add Description'),
                     TextInput::make('notes')->placeholder( 'Add Note'),
-                    TagsInput::make('tags')->separator(',')
+                    TagsInput::make('tags')->separator(','),
                 ])
             ])->columns(1);
     }
@@ -56,7 +57,9 @@ class ShopResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
+                ImageColumn::make('image')
+                ->default('images/shop.png')
+                ->label("Avatar"),
                 TextColumn::make('name')
                 ->label('App')
                 ->formatStateUsing(function ($state,$record) {
@@ -71,7 +74,7 @@ class ShopResource extends Resource
                 ->searchable(),
                 TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
                 TextColumn::make('notes')->default('No notes'),
-                TextColumn::make('description')->default('No description'),
+                TextColumn::make('description')->default('No description')->limit(19),
                 TextColumn::make('status')->default(function ($record) {
                     $type = ShopifyAppEvent::where('shop_id', $record->id)
                         ->where(function ($query) {
@@ -118,14 +121,19 @@ class ShopResource extends Resource
         ->schema(components: [
                 ComponentsGroup::make()->schema([
                     ComponentsSection::make('Image')->schema([
-                        ImageEntry::make('avatarUrl')->default('images/shop.png')->label("Avatar")
+                        ImageEntry::make('image')->default('images/shop.png')->label("Avatar")->size(50)->width('100%')
                         ->alignCenter()
                     ])->collapsible(),
                     ComponentsSection::make()->schema([
-                        TextEntry::make('name')->label("Store Name"),
+                        TextEntry::make('name')->label("Store Name")
+                        ->label("Store name")
+                        ->html()
+                        ->formatStateUsing(fn ($state, $record) => '<a href="https://' . $record->myshopifyDomain  . '" target="_blank" class="text-primary-600 underline">'. $record->name .'</a>'),
+
                     ]),
                 ]),
                 ComponentsSection::make()->schema([
+                    TextEntry::make('title')->default('No title'),
                     TextEntry::make('description')->default('No description'),
                     TextEntry::make('notes')->default('No notes'),
                     TextEntry::make('tags')->default('No Tags Yet')->badge(),

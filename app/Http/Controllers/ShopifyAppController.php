@@ -6,12 +6,14 @@ use App\Models\Partner;
 use App\Models\Shop;
 use App\Models\ShopifyApp;
 use App\Services\ApiServices;
+use App\Services\ShopUrlData;
+use App\Services\UrLdata;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 
-
+use function Pest\Laravel\json;
 
 class ShopifyAppController extends Controller
 {
@@ -24,16 +26,32 @@ class ShopifyAppController extends Controller
     }
 
     public function App(){
-
 /*         $shop = Shop::find(80);  // Replace with your shop's ID
         // Get related apps
         $apps = $shop->apps; */
-        $cmd1 = Artisan::call('app:sync-partner-app', [
-            'partnerId' => '3449862',
-            'appId' => '145227776001',
-        ]);
-        $apiKey = trim(Artisan::output());
-        return $apiKey;
+
+        return $this->apiservices->getData('query {
+  transactions {
+    edges {
+      node {
+        id
+        createdAt
+        ... on ReferralTransaction {
+          shop {
+            id
+            name
+            myshopifyDomain
+          }
+            amount{
+              amount
+              currencyCode
+            }
+            category
+         }
+      }
+    }
+  }
+}')->json();
 /*         return response()->json($this->responseData);
  */    }
     public function store(){

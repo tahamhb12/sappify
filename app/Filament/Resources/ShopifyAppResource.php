@@ -10,12 +10,14 @@ use App\Filament\Resources\ShopifyAppResource\RelationManagers\ShopsRelationMana
 use App\Filament\Resources\ShopifyAppResource\RelationManagers\TransactionEventsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
 use App\Models\ShopifyApp;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -24,6 +26,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Filament\Infolists\Components\Group as ComponentsGroup;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section as ComponentsSection;
+use Filament\Infolists\Components\TextEntry;
+use Str;
 
 class ShopifyAppResource extends Resource
 {
@@ -43,7 +50,7 @@ class ShopifyAppResource extends Resource
                 TextInput::make('api_key')->required()->readOnlyon('edit')->unique(ignoreRecord:true),
                 TextInput::make('title')->visibleOn('edit'),
                 TextInput::make('description')->visibleOn('edit'),
-                TextInput::make('url'),
+                TextInput::make('url')->label('App Url'),
             ]);
     }
 
@@ -84,15 +91,16 @@ class ShopifyAppResource extends Resource
                         'Z' => '#FF45F0', // Neon Pink
                     ];
                     $bgColor = $colorMapping[$name];
+                    $title = Str::limit($record->title, 30);
 
-                    return $record->image   ?  
+                    return $record->image   ?
                     "<div style='display: flex; align-items: center;'>
                     <div style='display:flex; justify-content:center; align-items:center; margin-left:-5px; width: 33px; height: 33px; border-radius: 8px; color: white; font-weight: bold; margin-right: 8px;'>
                         <img src=$record->image>
                     </div>
                     <p style='display:flex; flex-direction: column;'>
                         $state
-                        <span style='font-size:13px'>$record->title</span>
+                        <span style='font-size:13px'>$title</span>
                     </p>
                 </div>"
                     :
@@ -109,19 +117,43 @@ class ShopifyAppResource extends Resource
                 ->html()
                 ->searchable(),
                 TextColumn::make('api_key'),
-                TextColumn::make('description')->default('No Description')->width(20),
+                TextColumn::make('description')->default('No Description')->limit(20),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        $partner = Filament::getTenant();
+
+        return $infolist
+        ->schema(components: [
+                ComponentsGroup::make()->schema([
+                    ComponentsSection::make('Image')->schema([
+                        ImageEntry::make('image')->label("Avatar")
+                        ->alignCenter()
+                    ])->collapsible(),
+                    ComponentsSection::make()->schema([
+                        TextEntry::make('name')->label("App Name"),
+                    ]),
+                ]),
+                ComponentsSection::make()->schema([
+                    TextEntry::make('title')->default('No title'),
+                    TextEntry::make('description')->default('No description'),
+                ])->columnSpan(3)
+        ])->columns(4);
     }
 
     public static function getRelations(): array
@@ -138,6 +170,7 @@ class ShopifyAppResource extends Resource
         return [
             'index' => Pages\ListShopifyApps::route('/'),
             'create' => Pages\CreateShopifyApp::route('/create'),
+            'view' => Pages\ViewShopifyApp::route('/{record}'),
             'edit' => Pages\EditShopifyApp::route('/{record}/edit'),
         ];
     }

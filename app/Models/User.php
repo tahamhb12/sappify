@@ -17,10 +17,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     use HasFactory, Notifiable;
 
 
-/*     public function teams(): BelongsToMany
-    {
-        return $this->belongsToMany(Team::class);
-    } */
 
     public function getTenants(Panel $panel): Collection
     {

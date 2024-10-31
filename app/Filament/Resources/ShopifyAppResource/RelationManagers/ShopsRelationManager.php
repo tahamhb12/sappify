@@ -30,7 +30,9 @@ class ShopsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\ImageColumn::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
+                Tables\Columns\ImageColumn::make('image')
+                ->default('images/shop.png')
+                ->label("Avatar"),
                 Tables\Columns\TextColumn::make('name')
                 ->label('App')
                 ->formatStateUsing(function ($state,$record) {
@@ -45,7 +47,7 @@ class ShopsRelationManager extends RelationManager
                 ->searchable(),
                 Tables\Columns\TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
                 Tables\Columns\TextColumn::make('notes')->default('No notes'),
-                Tables\Columns\TextColumn::make('description')->default('No description'),
+                Tables\Columns\TextColumn::make('description')->default('No description')->limit(19),
                 Tables\Columns\TextColumn::make('status')->default(function ($record) {
                     $type = ShopifyAppEvent::where('shop_id', $record->id)
                         ->where(function ($query) {

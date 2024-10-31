@@ -9,6 +9,7 @@ use App\Models\ShopifyAppEvent;
 use App\Models\TransactionEvent;
 use App\Models\TransactionEvents;
 use App\Services\ApiServices;
+use App\Services\ShopUrlData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Exists;
@@ -38,22 +39,12 @@ class SyncPartnerAppEvents extends Command
         $partnerId = $this->argument('partnerId');
         $appId = $this->argument('appId');
 
-        $this->info("Sync AppId $appId in Partner $partnerId");
-
         $partner = Partner::where( "partner_id",$partnerId)->first();
-        if (!$partner) {
-            return $this->error("partner not found");
-        }
         $app = ShopifyApp::where("app_id", $appId)->first();
-        if (!$app) {
-            return $this->error("app not found");
-        }
+
 
         $api = new ApiServices($partner);
         $response = $api->getEvents($appId);
-
-        $eventsData = $response->json("data.app.events.edges");
-        $shopData = $response->json("data.app.events.edges");
 
         $appEvents = [
             'RELATIONSHIP_DEACTIVATED',
@@ -62,18 +53,26 @@ class SyncPartnerAppEvents extends Command
             'RELATIONSHIP_UNINSTALLED',
         ];
 
+        $urldata = new ShopUrlData();
+        $eventsData = $response->json("data.app.events.edges");
+        $shopData = $response->json("data.app.events.edges");
+
         if($eventsData){
             for($i = 0; $i < count($eventsData); $i++){
-
                 $shop_id = $shopData[$i]["node"]["shop"]["id"];
                 $shop_avatar = $shopData[$i]["node"]["shop"]["avatarUrl"];
+
+                $data = $urldata->getUrlData($shopData[$i]["node"]["shop"]["myshopifyDomain"]);
 
                 $shop =  Shop::firstOrCreate(([
                     'shop_id' => $shop_id,
                     "avatarUrl"=> $shop_avatar,
                     "myshopifyDomain"=>$shopData[$i]["node"]["shop"]["myshopifyDomain"],
                     "name"=>$shopData[$i]["node"]["shop"]["name"],
-                    'partner_id'=> $partner->id
+                    'partner_id'=> $partner->id,
+                    'title'=> $data['title'] ?? null,
+                    'image'=> $data['image'] ?? null,
+                    'description'=> $data['description'] ?? null
                 ]));
                     if(in_array($eventsData[$i]["node"]['type'],$appEvents)){
                         $event = ShopifyAppEvent::firstOrCreate([
@@ -92,16 +91,12 @@ class SyncPartnerAppEvents extends Command
                             'partner_id'=> $partner->id
                         ]);
                     }
-                $app = ShopifyApp::find($app->id);    // Replace with the app ID
-                // Assuming $shop and $app are already defined
+                $app = ShopifyApp::find($app->id);
                 $shop->apps()->syncWithoutDetaching([$app->id]);
             }
         }else{
             return 1;
         }
-
-
-        $this->info($response);
 
 
 }

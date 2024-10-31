@@ -29,26 +29,23 @@ class SyncPartnerApp extends Command
      */
     public function handle()
     {
+
         $partnerId = intval($this->argument('partnerId'));
         $appId = intval($this->argument('appId'));
 
-/*         $this->info(string: "Sync AppId $appId in Partner $partnerId");
- */
-        $partner = Partner::where("partner_id",$partnerId)->first();
+//     $this->info(string: "Sync AppId $appId in Partner $partnerId");
 
+        $partner = Partner::where("partner_id",$partnerId)->first();
         if (!$partner) {
             $this->error("partner not found");
             return 1;
         }
 
         $api = new ApiServices($partner);
-
         $response = $api->getApp($appId);
 
-        /// save app in DB
 
         $appData = $response->json('data');
-
         if($appData && $appData['app']!==null){
             $this->info($appData['app']['apiKey']);
         }else{
