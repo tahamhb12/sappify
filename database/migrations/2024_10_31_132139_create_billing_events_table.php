@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shopify_app_events', function (Blueprint $table) {
+        Schema::create('billing_events', function (Blueprint $table) {
             $table->id();
-            $table->string('occurred_at');
-            $table->enum('type', [
-                'RELATIONSHIP_DEACTIVATED',
-                'RELATIONSHIP_INSTALLED',
-                'RELATIONSHIP_REACTIVATED',
-                'RELATIONSHIP_UNINSTALLED',
-            ]);
-            $table->string('reason')->nullable();
-            $table->string('description')->nullable();
+            $table->string('event_id');
+            $table->string('type');
+            $table->string('amount');
+            $table->string('currency');
+            $table->string('billingOn')->nullable();
+            $table->string('name');
+            $table->boolean('isTest');
             $table->foreignId('app_id')->references('id')->on('shopify_apps')->cascadeOnDelete();
             $table->foreignId('shop_id')->references('id')->on('shops');
-            $table->foreignId("partner_id")->references("id")->on("partners");
+            $table->string('occurred_at');
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shopify_app_events');
+        Schema::dropIfExists('billing_events');
     }
 };
