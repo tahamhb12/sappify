@@ -46,12 +46,6 @@ class SyncPartnerAppEvents extends Command
         $api->getBillingEvents($appId);
 
 
-        if($api->getBillingEvents($appId)){
-            return 0;
-        }else{
-            return 1;
-        }
-
 
 }
 }
