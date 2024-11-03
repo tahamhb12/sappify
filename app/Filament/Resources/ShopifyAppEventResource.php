@@ -38,6 +38,7 @@ class ShopifyAppEventResource extends Resource
     protected static ?string $modelLabel = 'App Events';
 
 
+
     public static function form(Form $form): Form
     {
         $eventTypeMapping = [
@@ -90,8 +91,10 @@ class ShopifyAppEventResource extends Resource
                     return $eventTypeMapping[$state] ?? $state;
                 })
                 ->searchable(),
-                TextColumn::make('app.name')->searchable(),
                 TextColumn::make('shop.name')->searchable(),
+                TextColumn::make('reason'),
+                TextColumn::make('description'),
+                TextColumn::make('app.name')->searchable(),
                 TextColumn::make('occurred_at')->date()->sortable(),
             ])
             ->filters([
@@ -115,13 +118,7 @@ class ShopifyAppEventResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make(Auth::check() && Auth::user()->role == "admin"
-                ?[
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]:[]
-            ),
-            ]);
+            ->bulkActions([]);
     }
 
      public static function infolist(Infolist $infolist): Infolist{
@@ -153,10 +150,13 @@ class ShopifyAppEventResource extends Resource
             ComponentsSection::make()->schema([
                 TextEntry::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;  // Use simplified labels
+                    return $eventTypeMapping[$state] ?? $state; 
                 }),
-                TextEntry::make('app.name'),
                 TextEntry::make('shop.name'),
+                TextEntry::make('reason'),
+                TextEntry::make('description'),
+                TextEntry::make('app.name'),
+                TextEntry::make('occurred_at')->date(),
             ]
             )
         ]);

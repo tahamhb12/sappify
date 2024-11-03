@@ -2,17 +2,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopResource\Pages;
-use App\Filament\Resources\ShopResource\RelationManagers;
+use App\Filament\Resources\ShopResource\RelationManagers\AppEventsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\AppsRelationManager;
-use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
-use App\Filament\Resources\ShopResource\RelationManagers\TransactionEventsRelationManager;
+use App\Filament\Resources\ShopResource\RelationManagers\BillingEventsRelationManager ;
 use App\Models\Partner;
 use App\Models\Shop;
 use App\Models\ShopifyAppEvent;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\ImageEntry;
-use Filament\Tables\Actions\Action; // Correct namespace for table actions
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
@@ -168,9 +167,9 @@ class ShopResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EventsRelationManager::class,
+            AppEventsRelationManager::class,
             AppsRelationManager::class,
-            TransactionEventsRelationManager::class
+            BillingEventsRelationManager::class
         ];
     }
 

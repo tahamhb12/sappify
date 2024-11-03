@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('isTest');
             $table->foreignId('app_id')->references('id')->on('shopify_apps')->cascadeOnDelete();
             $table->foreignId('shop_id')->references('id')->on('shops');
+            $table->foreignId("partner_id")->references("id")->on("partners");
             $table->string('occurred_at');
             $table->timestamps();
         });

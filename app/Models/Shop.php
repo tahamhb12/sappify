@@ -22,11 +22,8 @@ class Shop extends Model
     public function BillingEvents(){
         return $this->hasMany(BillingEvents::class);
     }
-    public function Appevents(){
+    public function AppEvents(){
         return $this->hasMany(ShopifyAppEvent::class);
-    }
-    public function transactionEvents(){
-        return $this->hasMany(TransactionEvent::class);
     }
     public function partner(){
         return $this->belongsTo(Partner::class);

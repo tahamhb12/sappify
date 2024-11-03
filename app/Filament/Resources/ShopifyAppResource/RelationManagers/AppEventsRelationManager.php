@@ -36,13 +36,13 @@ class AppEventsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('type')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
                     return $eventTypeMapping[$state] ?? $state;
                 }),
-                Tables\Columns\TextColumn::make('app.name'),
-                Tables\Columns\TextColumn::make('shop.name'),
+                Tables\Columns\TextColumn::make('shop.name')->searchable(),
+                Tables\Columns\TextColumn::make('reason')->default('No reason'),
+                Tables\Columns\TextColumn::make('description')->default('No description'),
                 Tables\Columns\TextColumn::make('occurred_at')->date()->sortable(),
             ])
             ->filters([

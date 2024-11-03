@@ -44,7 +44,7 @@ class ApiServices
                 }
             }');
     }
-    public function getAppEvents($AppId){
+    public function getAppEvents($AppId,$app_id){
         $types = [
             'RELATIONSHIP_DEACTIVATED' => 'RelationshipDeactivated',
             'RELATIONSHIP_INSTALLED' =>'RelationshipInstalled',
@@ -52,14 +52,13 @@ class ApiServices
             'RELATIONSHIP_UNINSTALLED' =>'RelationshipUninstalled',
         ];
 
-
         foreach ($types as $type => $mode) {
             $hasNextPage = true;
             $endCursor = null; 
             while($hasNextPage){
                 $res = $this->getData('
                 {
-                    app(id: "gid://partners/App/'. $AppId .'"){
+                    app(id: "gid://partners/App/'. $app_id .'"){
                         events(types:[' . $type . ']' . ($endCursor ? ', after: "' . $endCursor . '"' : '') . ') {
                         edges {
                             cursor
@@ -86,12 +85,10 @@ class ApiServices
                         }
                     }
                 }');
-                $app = ShopifyApp::where("app_id", $AppId)->first();
                 $urldata = new ShopUrlData();
                 if($res->json("data.app.events.edges")){
                     $data = $res->json("data.app.events.edges");
                     for($i = 0 ; $i<count($res->json("data.app.events.edges")) ; $i++){
-
                         $shop_id = $data[$i]["node"]["shop"]["id"];
                         $shop_avatar = $data[$i]["node"]["shop"]["avatarUrl"];
                         $linkdata = $urldata->getUrlData($data[$i]["node"]["shop"]["myshopifyDomain"]);
@@ -110,24 +107,23 @@ class ApiServices
                             'type' => $data[$i]['node']['type'],
                             'reason' => $data[$i]['node']['reason'] ?? null,
                             'description' => $data[$i]['node']['description'] ?? null,
-                            'app_id' => $app->id,
+                            'app_id' => $AppId,
                             'shop_id' => $shop->id ?? 'no shop',
                             'partner_id' => $this->partnerId,
                             'occurred_at' => $data[$i]["node"]["occurredAt"],
                         ]);
-                        $app = ShopifyApp::find($app->id);
-                        $shop->apps()->syncWithoutDetaching([$app->id]);
+                        $shop->apps()->syncWithoutDetaching([$AppId]);
                     } 
                 }
                 $hasNextPage = $res->json("data.app.events.pageInfo.hasNextPage");
-                $hh = count($res->json("data.app.events.edges"))-1;
-                $endCursor = $res->json("data.app.events.edges.$hh.cursor"); 
+                $lastIndex = count($res->json("data.app.events.edges"))-1;
+                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor"); 
             }
         }
         }
 
 
-    public function getBillingEvents($AppId){
+    public function getBillingEvents($AppId,$app_id){
         $types = [
             'CREDIT_APPLIED' => 'CreditApplied',
             'CREDIT_FAILED' =>'CreditFailed',
@@ -148,14 +144,13 @@ class ApiServices
             'USAGE_CHARGE_APPLIED' => 'UsageChargeApplied'
         ];
 
-
         foreach ($types as $type => $mode) {
             $hasNextPage = true;
             $endCursor = null; 
             while($hasNextPage){
                 $res = $this->getData('
                 {
-                    app(id: "gid://partners/App/'.$AppId.'"){
+                    app(id: "gid://partners/App/'.$app_id.'"){
                         events(types:[' . $type . ']' . ($endCursor ? ', after: "' . $endCursor . '"' : '') . ') {
                         edges {
                             cursor
@@ -190,13 +185,10 @@ class ApiServices
                     }
                     }');
     
-                $app = ShopifyApp::where("app_id", $AppId)->first();
                 $urldata = new ShopUrlData();
-                $partner = Filament::getTenant();
                 if($res->json("data.app.events.edges")){
                     $data = $res->json("data.app.events.edges");
-                     for($i = 0 ; $i<count($res->json("data.app.events.edges")) ; $i++){
-
+                    for($i = 0 ; $i<count($res->json("data.app.events.edges")) ; $i++){
                         $shop_id = $data[$i]["node"]["shop"]["id"];
                         $shop_avatar = $data[$i]["node"]["shop"]["avatarUrl"];
                         $linkdata = $urldata->getUrlData($data[$i]["node"]["shop"]["myshopifyDomain"]);
@@ -219,19 +211,24 @@ class ApiServices
                             'billingOn' => substr($type, 0, 12) === 'SUBSCRIPTION' ? $data[$i]['node']['charge']["billingOn"] : null,
                             'name' => $data[$i]['node']['charge']["name"],
                             'isTest' => $data[$i]['node']['charge']["test"],
-                            'app_id' => $app->id,
+                            'app_id' => $AppId,
+                            'partner_id' => $this->partnerId,
                             'shop_id' => $shop->id ?? 'no shop',
                             'occurred_at' => $data[$i]["node"]["occurredAt"],
                         ]);
-                        $app = ShopifyApp::find($app->id);
-                        $shop->apps()->syncWithoutDetaching([$app->id]);
+                        $shop->apps()->syncWithoutDetaching([$AppId]);
                     } 
                 }
                 $hasNextPage = $res->json("data.app.events.pageInfo.hasNextPage");
-                $hh = count($res->json("data.app.events.edges"))-1;
-                $endCursor = $res->json("data.app.events.edges.$hh.cursor"); 
+                $lastIndex = count($res->json("data.app.events.edges"))-1;
+                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor"); 
             }
         }
+    }
+
+    public function getEvents($AppId,$app_id){
+        $this->getAppEvents($AppId,$app_id);
+        $this->getBillingEvents($AppId,$app_id);
     }
 
     public function checkPartner(){

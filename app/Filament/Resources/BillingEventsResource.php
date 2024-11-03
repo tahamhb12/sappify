@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TransactionEventsResource\Pages;
-use App\Filament\Resources\TransactionEventsResource\RelationManagers;
+use App\Filament\Resources\BillingEventsResource\Pages;
+use App\Models\BillingEvents;
 use App\Models\ShopifyApp;
 use App\Models\TransactionEvent;
 use App\Models\TransactionEvents;
@@ -27,12 +27,14 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Filters\DateFilter;
 
 
-class TransactionEventsResource extends Resource
+class BillingEventsResource extends Resource
 {
-    protected static ?string $model = TransactionEvent::class;
+    protected static ?string $model = BillingEvents::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Events";
+    protected static ?int $navigationSort = 2;
+
 
 
     public static function form(Form $form): Form
@@ -70,12 +72,22 @@ class TransactionEventsResource extends Resource
             ->columns([
                 TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;
+                    return $eventTypeMapping[$state] ?? $state; 
+                }),
+                TextColumn::make('name'),
+                TextColumn::make('shop.name'),
+                Tables\Columns\TextColumn::make('amount')
+                ->formatStateUsing(function($record,$state){
+                    return 
+                    "
+                    <div>$state <span> $record->currency</span></div>
+                    ";
                 })
-                ->searchable(),
-                TextColumn::make('app.name')->searchable(),
+                ->html(),
+                TextColumn::make('billingOn')->default('No billing Date'),
                 TextColumn::make('shop.name')->searchable(),
-                TextColumn::make('occurred_at')->date()->sortable(),
+                TextColumn::make('isTest')->label('is Test'),
+                TextColumn::make('occurred_at')->date(),
             ])
             ->filters([
                 SelectFilter::make("type")
@@ -98,13 +110,7 @@ class TransactionEventsResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make(Auth::check() && Auth::user()->role == "admin"
-                ?[
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]:[]
-            ),
-            ]);
+            ->bulkActions([]);
     }
 
      public static function infolist(Infolist $infolist): Infolist{
@@ -132,10 +138,21 @@ class TransactionEventsResource extends Resource
             ComponentsSection::make()->schema([
                 TextEntry::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;  // Use simplified labels
+                    return $eventTypeMapping[$state] ?? $state; 
                 }),
-                TextEntry::make('app.name'),
+                TextEntry::make('name'),
+                TextEntry::make('amount')
+                ->formatStateUsing(function($record,$state){
+                    return 
+                    "
+                    <div>$state <span> $record->currency</span></div>
+                    ";
+                })
+                ->html(),
+                TextEntry::make('billingOn')->default('No billing Date'),
                 TextEntry::make('shop.name'),
+                TextEntry::make('isTest')->label('is Test'),
+                TextEntry::make('occurred_at')->date(),
             ]
             )
         ]);
@@ -150,10 +167,10 @@ class TransactionEventsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTransactionEvents::route('/'),
-            'create' => Pages\CreateTransactionEvents::route('/create'),
-            'view' => Pages\ViewTransactionEvents::route('/{record}'),
-            'edit' => Pages\EditTransactionEvents::route('/{record}/edit'),
+            'index' => Pages\ListBillingEvents::route('/'),
+            'create' => Pages\CreateBillingEvents::route('/create'),
+            'view' => Pages\ViewBillingEvents::route('/{record}'),
+            'edit' => Pages\EditBillingEvents::route('/{record}/edit'),
         ];
     }
 }

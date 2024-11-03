@@ -3,29 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopifyAppResource\Pages;
-use App\Filament\Resources\ShopifyAppResource\RelationManagers;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers\AppEventsRelationManager;
-use App\Filament\Resources\ShopifyAppResource\RelationManagers\EventsRelationManager as RelationManagersEventsRelationManager;
+use App\Filament\Resources\ShopifyAppResource\RelationManagers\BillingEventsRelationManager;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers\ShopsRelationManager;
-use App\Filament\Resources\ShopifyAppResource\RelationManagers\TransactionEventsRelationManager;
-use App\Filament\Resources\ShopResource\RelationManagers\EventsRelationManager;
 use App\Models\ShopifyApp;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 use Filament\Infolists\Components\Group as ComponentsGroup;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section as ComponentsSection;
@@ -161,7 +150,7 @@ class ShopifyAppResource extends Resource
         return [
             AppEventsRelationManager::class,
             ShopsRelationManager::class,
-            TransactionEventsRelationManager::class
+            BillingEventsRelationManager::class
         ];
     }
 

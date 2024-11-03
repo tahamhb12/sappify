@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\TransactionEventsResource\Pages;
+namespace App\Filament\Resources\BillingEventsResource\Pages;
 
-use App\Filament\Resources\TransactionEventsResource;
+use App\Filament\Resources\BillingEventsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditTransactionEvents extends EditRecord
+class EditBillingEvents extends EditRecord
 {
-    protected static string $resource = TransactionEventsResource::class;
+    protected static string $resource = BillingEventsResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -11,9 +11,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TransactionEventsRelationManager extends RelationManager
+class BillingEventsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'transactionEvents';
+    protected static string $relationship = 'BillingEvents';
 
     public function form(Form $form): Form
     {
@@ -49,13 +49,21 @@ class TransactionEventsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('type')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
                     return $eventTypeMapping[$state] ?? $state;
                 }),
-                Tables\Columns\TextColumn::make('app.name'),
-                Tables\Columns\TextColumn::make('shop.name'),
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('amount')
+                ->formatStateUsing(function($record,$state){
+                    return 
+                    "
+                    <div>$state <span> $record->currency</span></div>
+                    ";
+                })->html(),
+                Tables\Columns\TextColumn::make('billingOn')->default('No billing Date'),
+                Tables\Columns\TextColumn::make('shop.name')->searchable(),
+                Tables\Columns\TextColumn::make('isTest')->label('is Test'),
                 Tables\Columns\TextColumn::make('occurred_at')->date()->sortable(),
             ])
             ->filters([

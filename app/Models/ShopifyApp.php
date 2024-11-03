@@ -25,8 +25,8 @@ class ShopifyApp extends Model
     public function AppEvents(){
         return $this->hasMany(ShopifyAppEvent::class,'app_id');
     }
-    public function transactionEvents(){
-        return $this->hasMany(TransactionEvent::class,'app_id');
+    public function BillingEvents(){
+        return $this->hasMany(BillingEvents::class,'app_id');
     }
     public function shops(){
         return $this->belongsToMany(Shop::class,'app_shop', 'app_id', 'shop_id');

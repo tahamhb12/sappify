@@ -40,12 +40,11 @@ class SyncPartnerAppEvents extends Command
         $appId = $this->argument('appId');
 
         $partner = Partner::where( "partner_id",$partnerId)->first();
+        $AppId = ShopifyApp::where( "app_id",$appId)->first()->id;
+        $app_id = ShopifyApp::where( "app_id",$appId)->first()->app_id;
 
         $api = new ApiServices($partner);
+        $api->getEvents($AppId,$app_id);
 
-        $api->getBillingEvents($appId);
-
-
-
-}
+    }
 }
