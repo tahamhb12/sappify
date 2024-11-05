@@ -11,6 +11,14 @@ class Partner extends Model
     use HasFactory;
     protected $fillable = ["partner_id","name","api_key","user_id"];
 
+    public function update(array $attributes = [], array $options = [])
+    {
+        unset($attributes['partner_id']);
+        unset($attributes['api_key']);
+        return parent::update($attributes, $options);
+    }
+
+
     public function shopifyApps(){
         return $this->hasMany(ShopifyApp::class);
     }

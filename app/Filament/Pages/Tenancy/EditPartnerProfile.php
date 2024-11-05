@@ -18,9 +18,9 @@ class EditPartnerProfile extends EditTenantProfile
     {
         return $form
             ->schema([
-                TextInput::make('partner_id')->required(),
+                TextInput::make('partner_id')->readOnly(),
                 TextInput::make('name')->required(),
-                TextInput::make(name: 'api_key')->required(),
+                TextInput::make(name: 'api_key')->readOnly(),
             ]);
     }
     protected function getHeaderActions(): array

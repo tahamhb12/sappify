@@ -15,7 +15,12 @@ class ShopifyApp extends Model
 
     protected $table = 'shopify_apps';
 
-
+    public function update(array $attributes = [], array $options = [])
+    {
+        unset($attributes['api_key']);
+        unset($attributes['app_id']);
+        return parent::update($attributes, $options);
+    }
 
 
     public function partner(){
