@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
-            $table->foreignId('partner_id')->references('id')->on('partners');
+            $table->foreignId('partner_id')->references('id')->on('partners')->cascadeOnDelete();
             $table->timestamps();
         });
     }

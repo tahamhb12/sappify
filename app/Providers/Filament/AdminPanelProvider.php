@@ -33,6 +33,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->registration()
+            ->profile()
+            ->passwordReset()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -60,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenant(Partner::class)
             ->tenantRegistration(RegisterPartner::class)
             ->tenantProfile(EditPartnerProfile::class);
+
 
 
 

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->foreignId('app_id')->references('id')->on('shopify_apps')->cascadeOnDelete();
             $table->foreignId('shop_id')->references('id')->on('shops');
-            $table->foreignId("partner_id")->references("id")->on("partners");
+            $table->foreignId("partner_id")->references("id")->on("partners")->cascadeOnDelete();
             $table->timestamps();
         });
     }

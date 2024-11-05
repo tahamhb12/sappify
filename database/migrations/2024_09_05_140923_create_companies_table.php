@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->foreignId('partner_id')->references('id')->on('partners');
+            $table->foreignId('partner_id')->references('id')->on('partners')->cascadeOnDelete();
             $table->timestamps();
         });
     }

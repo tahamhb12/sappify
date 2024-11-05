@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\BillingEvents;
 use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
 use App\Models\User;
@@ -28,7 +29,15 @@ class TestWidget extends BaseWidget
             Stat::make("Apps",ShopifyApp::where('partner_id',$partner->id)->count())
             ->description("Existed Shopify Apps")
             ->chart([1,3,5,10,20,40]),
-            Stat::make("Events", ShopifyAppEvent::query()
+            Stat::make("App Events", ShopifyAppEvent::query()
+            ->when($selectedApp, fn($query) => $query->where('app_id', $selectedApp))
+            ->when($partner, fn($query) => $query->where('partner_id', $partner->id))
+            ->when($startDate, fn($query) => $query->whereDate('occurred_at', '>=', $startDate))
+            ->when($endDate, fn($query) => $query->whereDate('occurred_at', '<=', $endDate))
+            ->count())
+            ->description("Shopify Events")
+            ->chart([1, 3, 5, 10, 20, 40]),
+            Stat::make("Billing Events", BillingEvents::query()
             ->when($selectedApp, fn($query) => $query->where('app_id', $selectedApp))
             ->when($partner, fn($query) => $query->where('partner_id', $partner->id))
             ->when($startDate, fn($query) => $query->whereDate('occurred_at', '>=', $startDate))
