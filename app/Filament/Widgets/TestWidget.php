@@ -43,7 +43,7 @@ class TestWidget extends BaseWidget
             ->when($startDate, fn($query) => $query->whereDate('occurred_at', '>=', $startDate))
             ->when($endDate, fn($query) => $query->whereDate('occurred_at', '<=', $endDate))
             ->count())
-            ->description("Shopify Events")
+            ->description("Billing Events")
             ->chart([1, 3, 5, 10, 20, 40])
         ];
     }
