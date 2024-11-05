@@ -35,7 +35,7 @@ class TestWidget extends BaseWidget
             ->when($startDate, fn($query) => $query->whereDate('occurred_at', '>=', $startDate))
             ->when($endDate, fn($query) => $query->whereDate('occurred_at', '<=', $endDate))
             ->count())
-            ->description("Shopify Events")
+            ->description("Shopify App Events")
             ->chart([1, 3, 5, 10, 20, 40]),
             Stat::make("Billing Events", BillingEvents::query()
             ->when($selectedApp, fn($query) => $query->where('app_id', $selectedApp))
