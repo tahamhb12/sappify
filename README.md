@@ -15,9 +15,9 @@ Follow these instructions to set up and run the application on your local machin
 
 Ensure you have the following installed on your system:
 
-- **PHP**: >= 8.0
+- **PHP**: >= 8.2
 - **Composer**
-- **Laravel**: >= 9.0
+- **Laravel**: >= 11.0
 - **MySQL or any other compatible database**
 
 ### Installation
