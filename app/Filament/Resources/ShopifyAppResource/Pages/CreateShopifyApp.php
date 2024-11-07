@@ -20,11 +20,11 @@ class CreateShopifyApp extends CreateRecord
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
         $partnerId = Filament::getTenant()->partner_id;
-        $appId = $data['app_id'];
+        $AppId = $data['app_id'];
 
         $getApp = Artisan::call('app:sync-partner-app', [
             'partnerId' => $partnerId,
-            'appId' => $appId,
+            'appId' => $AppId,
         ]);
         $apiKey = trim(Artisan::output());
 
@@ -49,7 +49,7 @@ class CreateShopifyApp extends CreateRecord
             ->send();
         Artisan::queue('app:sync-partner-app-events', [
             'partnerId' => $partnerId,
-            'appId' => $appId,
+            'appId' => $AppId,
         ]);
         return $record;
     }

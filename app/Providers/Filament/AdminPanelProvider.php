@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Tenancy\EditPartnerProfile;
 use App\Filament\Pages\Tenancy\RegisterPartner;
 use App\Filament\Resources\ShopifyAppResource;
+use App\Http\Middleware\RestrictNonAdminAccess;
 use App\Models\Partner;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -55,9 +56,6 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
             ])
             ->tenant(Partner::class)
             ->tenantRegistration(RegisterPartner::class)

@@ -29,7 +29,7 @@ class SyncPartnerAppEvents extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch Shopify App Events and Billing Events';
 
     /**
      * Execute the console command.
@@ -40,11 +40,10 @@ class SyncPartnerAppEvents extends Command
         $appId = $this->argument('appId');
 
         $partner = Partner::where( "partner_id",$partnerId)->first();
-        $AppId = ShopifyApp::where( "app_id",$appId)->first()->id;
-        $app_id = ShopifyApp::where( "app_id",$appId)->first()->app_id;
+        $ShopifyApp = ShopifyApp::where( "app_id",$appId)->first();
 
         $api = new ApiServices($partner);
-        $api->getEvents($AppId,$app_id);
+        $api->getEvents($ShopifyApp);
 
     }
 }

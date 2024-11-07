@@ -22,7 +22,7 @@ class SyncPartnerApp extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch the ShopifyApp';
 
     /**
      * Execute the console command.

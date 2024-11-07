@@ -72,20 +72,20 @@ class BillingEventsResource extends Resource
             ->columns([
                 TextColumn::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state; 
+                    return $eventTypeMapping[$state] ?? $state;
                 }),
                 TextColumn::make('name'),
                 TextColumn::make('shop.name'),
+                TextColumn::make('app.name')->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                 ->formatStateUsing(function($record,$state){
-                    return 
+                    return
                     "
                     <div>$state <span> $record->currency</span></div>
                     ";
                 })
                 ->html(),
                 TextColumn::make('billingOn')->default('No billing Date'),
-                TextColumn::make('shop.name')->searchable(),
                 TextColumn::make('isTest')->label('is Test'),
                 TextColumn::make('occurred_at')->date(),
             ])
@@ -93,6 +93,8 @@ class BillingEventsResource extends Resource
                 SelectFilter::make("type")
                 ->options($eventTypeMapping)
                 ->multiple(),
+                SelectFilter::make("isTest")
+                ->options(['false','true']),
                 SelectFilter::make("app_id")
                 ->options(ShopifyApp::all()->pluck('name',"id"))->label("App"),
                 Filter::make('occurred_at')
@@ -138,12 +140,12 @@ class BillingEventsResource extends Resource
             ComponentsSection::make()->schema([
                 TextEntry::make('type')
                 ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state; 
+                    return $eventTypeMapping[$state] ?? $state;
                 }),
                 TextEntry::make('name'),
                 TextEntry::make('amount')
                 ->formatStateUsing(function($record,$state){
-                    return 
+                    return
                     "
                     <div>$state <span> $record->currency</span></div>
                     ";

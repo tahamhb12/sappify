@@ -3,17 +3,28 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ShopUrlData
 {
     public function getUrlData($url)
     {
+
         if (!$url) {
             return null;
         }
 
-        $response = Http::get($url);
+        // check if is a valid url
+
+        try {
+            $response = Http::get($url);
+        } catch (\Throwable $th) {
+            Log::error("error", [$th]);
+            return 'bad link';
+        }
+
+
 
         if ($response->failed()) {
             return 'bad link';

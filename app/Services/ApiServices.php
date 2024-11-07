@@ -44,7 +44,7 @@ class ApiServices
                 }
             }');
     }
-    public function getAppEvents($AppId,$app_id){
+    public function getAppEvents($ShopifyApp){
         $types = [
             'RELATIONSHIP_DEACTIVATED' => 'RelationshipDeactivated',
             'RELATIONSHIP_INSTALLED' =>'RelationshipInstalled',
@@ -54,11 +54,11 @@ class ApiServices
 
         foreach ($types as $type => $mode) {
             $hasNextPage = true;
-            $endCursor = null; 
+            $endCursor = null;
             while($hasNextPage){
                 $res = $this->getData('
                 {
-                    app(id: "gid://partners/App/'. $app_id .'"){
+                    app(id: "gid://partners/App/'. $ShopifyApp->app_id .'"){
                         events(types:[' . $type . ']' . ($endCursor ? ', after: "' . $endCursor . '"' : '') . ') {
                         edges {
                             cursor
@@ -70,7 +70,7 @@ class ApiServices
                                 id
                                 myshopifyDomain
                                 name
-                            } 
+                            }
                             '.($type == 'RELATIONSHIP_UNINSTALLED' ? '
                             ... on ' . $mode . ' {
                                 reason
@@ -85,45 +85,56 @@ class ApiServices
                         }
                     }
                 }');
-                $urldata = new ShopUrlData();
+                $UrlData = new ShopUrlData();
                 if($res->json("data.app.events.edges")){
-                    $data = $res->json("data.app.events.edges");
                     for($i = 0 ; $i<count($res->json("data.app.events.edges")) ; $i++){
-                        $shop_id = $data[$i]["node"]["shop"]["id"];
-                        $shop_avatar = $data[$i]["node"]["shop"]["avatarUrl"];
-                        $linkdata = $urldata->getUrlData($data[$i]["node"]["shop"]["myshopifyDomain"]);
-                        $shop =  Shop::firstOrCreate(([
-                            'shop_id' => $shop_id,
-                            "avatarUrl"=> $shop_avatar,
-                            "myshopifyDomain"=>$data[$i]["node"]["shop"]["myshopifyDomain"],
-                            "name"=>$data[$i]["node"]["shop"]["name"],
-                            'partner_id'=> $this->partnerId,
-                            'title'=> $linkdata['title'] ?? null,
-                            'image'=> $linkdata['image'] ?? null,
-                            'description'=> $linkdata['description'] ?? null
-                        ]));
 
+                        $data = $res->json("data.app.events.edges.$i.node");
+                        $Shop = collect([
+                            'ShopId' => $data["shop"]["id"],
+                            'ShopAvatar' => $data["shop"]["avatarUrl"],
+                            'ShopifyDomain' => $data["shop"]["myshopifyDomain"],
+                            'ShopName' => $data["shop"]["name"]
+                        ]);
+                        $AppEvent = collect([
+                            'Type' => $data['type'],
+                            'Reason' => $data['reason'] ?? null,
+                            'Description' => $data['description'] ?? null,
+                            'OccurredAt' => $data['occurredAt'],
+                        ]);
+
+                        $LinkData = $UrlData->getUrlData($Shop->get('ShopifyDomain'));
+                        $shop =  Shop::firstOrCreate(([
+                            'shop_id' => $Shop->get('ShopId'),
+                            "avatarUrl"=> $Shop->get('ShopAvatar'),
+                            "myshopifyDomain"=>$Shop->get('ShopifyDomain'),
+                            "name"=>$Shop->get('ShopName'),
+                            'partner_id'=> $this->partnerId,
+                            'title'=> $LinkData['title'] ?? null,
+                            'image'=> $LinkData['image'] ?? null,
+                            'description'=> $LinkData['description'] ?? null
+                        ]));
                         ShopifyAppEvent::firstOrCreate([
-                            'type' => $data[$i]['node']['type'],
-                            'reason' => $data[$i]['node']['reason'] ?? null,
-                            'description' => $data[$i]['node']['description'] ?? null,
-                            'app_id' => $AppId,
+                            'type' => $AppEvent->get('Type'),
+                            'reason' => $AppEvent->get('Reason') ,
+                            'description' => $AppEvent->get('Description'),
+                            'app_id' => $ShopifyApp->id,
                             'shop_id' => $shop->id ?? 'no shop',
                             'partner_id' => $this->partnerId,
-                            'occurred_at' => $data[$i]["node"]["occurredAt"],
+                            'occurred_at' => $AppEvent->get('OccurredAt'),
                         ]);
-                        $shop->apps()->syncWithoutDetaching([$AppId]);
-                    } 
+                        $shop->apps()->syncWithoutDetaching([$ShopifyApp->id]);
+                    }
                 }
                 $hasNextPage = $res->json("data.app.events.pageInfo.hasNextPage");
                 $lastIndex = count($res->json("data.app.events.edges"))-1;
-                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor"); 
+                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor");
             }
         }
         }
 
 
-    public function getBillingEvents($AppId,$app_id){
+    public function getBillingEvents($ShopifyApp){
         $types = [
             'CREDIT_APPLIED' => 'CreditApplied',
             'CREDIT_FAILED' =>'CreditFailed',
@@ -146,11 +157,11 @@ class ApiServices
 
         foreach ($types as $type => $mode) {
             $hasNextPage = true;
-            $endCursor = null; 
+            $endCursor = null;
             while($hasNextPage){
                 $res = $this->getData('
                 {
-                    app(id: "gid://partners/App/'.$app_id.'"){
+                    app(id: "gid://partners/App/'.$ShopifyApp->app_id.'"){
                         events(types:[' . $type . ']' . ($endCursor ? ', after: "' . $endCursor . '"' : '') . ') {
                         edges {
                             cursor
@@ -184,51 +195,66 @@ class ApiServices
                         }
                     }
                     }');
-    
-                $urldata = new ShopUrlData();
-                if($res->json("data.app.events.edges")){
-                    $data = $res->json("data.app.events.edges");
-                    for($i = 0 ; $i<count($res->json("data.app.events.edges")) ; $i++){
-                        $shop_id = $data[$i]["node"]["shop"]["id"];
-                        $shop_avatar = $data[$i]["node"]["shop"]["avatarUrl"];
-                        $linkdata = $urldata->getUrlData($data[$i]["node"]["shop"]["myshopifyDomain"]);
-                        $shop =  Shop::firstOrCreate(([
-                            'shop_id' => $shop_id,
-                            "avatarUrl"=> $shop_avatar,
-                            "myshopifyDomain"=>$data[$i]["node"]["shop"]["myshopifyDomain"],
-                            "name"=>$data[$i]["node"]["shop"]["name"],
-                            'partner_id'=> $this->partnerId,
-                            'title'=> $linkdata['title'] ?? null,
-                            'image'=> $linkdata['image'] ?? null,
-                            'description'=> $linkdata['description'] ?? null
-                        ]));
 
+                    $UrlData = new ShopUrlData();
+                    if($res->json("data.app.events.edges")){
+                        for($i = 0 ; $i<count($res->json("data.app.events.edges")) ; $i++){
+
+                            $data = $res->json("data.app.events.edges.$i.node");
+                            $Shop = collect([
+                                'ShopId' => $data["shop"]["id"],
+                                'ShopAvatar' => $data["shop"]["avatarUrl"],
+                                'ShopifyDomain' => $data["shop"]["myshopifyDomain"],
+                                'ShopName' => $data["shop"]["name"]
+                            ]);
+                            $BillingEvent = collect([
+                                'EventId' => $data['charge']['id'],
+                                'Type' => $data['type'],
+                                'Amount' => $data['charge']['amount']['amount'],
+                                'Currency' => $data['charge']['amount']['currencyCode'],
+                                'BillingOn' => substr($type, 0, 12) === 'SUBSCRIPTION' ? $data['charge']["billingOn"] : null,
+                                'Name' => $data['charge']['name'],
+                                'IsTest' => $data['charge']['test'],
+                                'OccurredAt' => $data['occurredAt'],
+                            ]);
+
+                        $LinkData = $UrlData->getUrlData($Shop->get('ShopifyDomain'));
+                        $shop =  Shop::firstOrCreate(([
+                            'shop_id' => $Shop->get('ShopId'),
+                            "avatarUrl"=> $Shop->get('ShopAvatar'),
+                            "myshopifyDomain"=>$Shop->get('ShopifyDomain'),
+                            "name"=>$Shop->get('ShopName'),
+                            'partner_id'=> $this->partnerId,
+                            'title'=> $LinkData['title'] ?? null,
+                            'image'=> $LinkData['image'] ?? null,
+                            'description'=> $LinkData['description'] ?? null
+                        ]));
                         BillingEvents::firstOrCreate([
-                            'event_id' => $data[$i]['node']['charge']["id"],
-                            'type' => $data[$i]['node']['type'],
-                            'amount' => $data[$i]['node']['charge']['amount']["amount"],
-                            'currency' => $data[$i]['node']['charge']["amount"]['currencyCode'],
-                            'billingOn' => substr($type, 0, 12) === 'SUBSCRIPTION' ? $data[$i]['node']['charge']["billingOn"] : null,
-                            'name' => $data[$i]['node']['charge']["name"],
-                            'isTest' => $data[$i]['node']['charge']["test"],
-                            'app_id' => $AppId,
+                            'event_id' => $BillingEvent->get('EventId'),
+                            'type' => $BillingEvent->get('Type'),
+                            'amount' => $BillingEvent->get('Amount'),
+                            'currency' => $BillingEvent->get('Currency'),
+                            'billingOn' => $BillingEvent->get('BillingOn'),
+                            'name' => $BillingEvent->get('Name'),
+                            'isTest' => $BillingEvent->get('IsTest'),
+                            'app_id' => $ShopifyApp->id,
                             'partner_id' => $this->partnerId,
                             'shop_id' => $shop->id ?? 'no shop',
-                            'occurred_at' => $data[$i]["node"]["occurredAt"],
+                            'occurred_at' => $BillingEvent->get('OccurredAt'),
                         ]);
-                        $shop->apps()->syncWithoutDetaching([$AppId]);
-                    } 
+                        $shop->apps()->syncWithoutDetaching([$ShopifyApp->id]);
+                    }
                 }
                 $hasNextPage = $res->json("data.app.events.pageInfo.hasNextPage");
                 $lastIndex = count($res->json("data.app.events.edges"))-1;
-                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor"); 
+                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor");
             }
         }
     }
 
-    public function getEvents($AppId,$app_id){
-        $this->getAppEvents($AppId,$app_id);
-        $this->getBillingEvents($AppId,$app_id);
+    public function getEvents($ShopifyApp){
+        $this->getAppEvents($ShopifyApp);
+        $this->getBillingEvents($ShopifyApp);
     }
 
     public function checkPartner(){
