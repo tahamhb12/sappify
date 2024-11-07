@@ -60,3 +60,6 @@ Ensure you have the following installed on your system:
     ```bash
     php artisan serve
     ```
+
+The application should now be accessible at [http://localhost:8000](http://localhost:8000).
+
