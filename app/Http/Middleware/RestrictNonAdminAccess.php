@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class RestrictNonAdminAccess
@@ -19,6 +18,7 @@ class RestrictNonAdminAccess
         if (str_starts_with($request->route()->getName(), 'admin')) {
             return $next($request);
         }
+
         return redirect('/admin');
     }
 }

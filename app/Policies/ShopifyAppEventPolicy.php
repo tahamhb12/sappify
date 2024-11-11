@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\ShopifyAppEvent;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
 class ShopifyAppEventPolicy
@@ -38,7 +37,7 @@ class ShopifyAppEventPolicy
      */
     public function update(User $user, ShopifyAppEvent $shopifyAppEvent): bool
     {
-        return Auth::check() && Auth::user()->role == "admin" ? true : false;
+        return Auth::check() && Auth::user()->role == 'admin' ? true : false;
     }
 
     /**
@@ -46,7 +45,7 @@ class ShopifyAppEventPolicy
      */
     public function delete(User $user, ShopifyAppEvent $shopifyAppEvent): bool
     {
-        return Auth::check() && Auth::user()->role == "admin" ? true : false;
+        return Auth::check() && Auth::user()->role == 'admin' ? true : false;
     }
 
     /**
@@ -56,12 +55,12 @@ class ShopifyAppEventPolicy
     {
         return false;
     }
-    
+
     /**
      * Determine whether the user can permanently delete the model.
      */
     public function forceDelete(User $user, ShopifyAppEvent $shopifyAppEvent): bool
     {
-        return Auth::check() && Auth::user()->role == "admin" ? true : false;
+        return Auth::check() && Auth::user()->role == 'admin' ? true : false;
     }
 }

@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ShopifyAppController;
 use App\Http\Controllers\ShopifyAppEventController;
 use App\Http\Middleware\RestrictNonAdminAccess;
 use Illuminate\Support\Facades\Route;
 
-
-Route::middleware(RestrictNonAdminAccess::class)->group(function(){
+Route::middleware(RestrictNonAdminAccess::class)->group(function () {
 
     Route::get('/', function () {
         return view('welcome');

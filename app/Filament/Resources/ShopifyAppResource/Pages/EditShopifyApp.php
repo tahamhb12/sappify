@@ -14,23 +14,24 @@ class EditShopifyApp extends EditRecord
 
     protected function afterSave(): void
     {
-        $urldata = new UrLdata();
+        $urldata = new UrLdata;
         $url = $this->form->getState()['url'];
         $getData = $urldata->getUrlData($url);
-        if($getData && $getData!=='bad link'){
-            $this->record->title=$getData['title'];
-            $this->record->description=$getData['description'];
-            $this->record->image=$getData['image'];
+        if ($getData && $getData !== 'bad link') {
+            $this->record->title = $getData['title'];
+            $this->record->description = $getData['description'];
+            $this->record->image = $getData['image'];
             $this->record->save();
-        }else if(!$getData){
-            '';
-        }else{
+        } elseif (! $getData) {
+
+        } else {
             Notification::make()
-            ->title('bad url.')
-            ->danger()
-            ->send();
+                ->title('bad url.')
+                ->danger()
+                ->send();
         }
     }
+
     protected function getHeaderActions(): array
     {
         return [

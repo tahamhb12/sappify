@@ -1,20 +1,22 @@
 <?php
+
 namespace App\Filament\Widgets;
 
 use App\Models\ShopifyAppEvent;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class InstallsChartWidget extends ChartWidget
 {
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 1;
-    protected static ?string $heading = 'Installs';
-    public ?string $filter = 'month';
 
+    protected static ?string $heading = 'Installs';
+
+    public ?string $filter = 'month';
 
     protected function getFilters(): ?array
     {
@@ -40,7 +42,7 @@ class InstallsChartWidget extends ChartWidget
         };
 
         $query = ShopifyAppEvent::query()
-            ->when($selectedApp, fn($query) => $query->where('app_id', $selectedApp))
+            ->when($selectedApp, fn ($query) => $query->where('app_id', $selectedApp))
             ->where('type', 'RELATIONSHIP_INSTALLED');
 
         $data = Trend::query($query)
@@ -59,12 +61,13 @@ class InstallsChartWidget extends ChartWidget
             'labels' => $data->map(fn (TrendValue $value) => $value->date),
         ];
     }
+
     public function getDescription(): string
     {
         $totalInstalls = $this->getData()['datasets'][0]['data']->sum();
+
         return "Total Installs: $totalInstalls";
     }
-
 
     protected function getType(): string
     {

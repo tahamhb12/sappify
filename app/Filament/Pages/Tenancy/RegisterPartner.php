@@ -3,17 +3,15 @@
 namespace App\Filament\Pages\Tenancy;
 
 use App\Models\Partner;
-use App\Models\Team;
 use App\Services\ApiServices;
-use Illuminate\Validation\ValidationException;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Tenancy\RegisterTenant;
+use Illuminate\Validation\ValidationException;
 
 class RegisterPartner extends RegisterTenant
 {
-
     public static function getLabel(): string
     {
         return 'Register Partner';
@@ -36,9 +34,9 @@ class RegisterPartner extends RegisterTenant
         $partner = new Partner($data);
         $api = new ApiServices($partner);
         $response = $api->checkPartner();
-        if($response->ok()){
+        if ($response->ok()) {
             return Partner::create($data);
-        }else{
+        } else {
             Notification::make()
                 ->title('Partner not found.')
                 ->danger()
@@ -48,8 +46,7 @@ class RegisterPartner extends RegisterTenant
             ]);
         }
 
-
-      //  $partner->users()->attach(auth()->user());
+        //  $partner->users()->attach(auth()->user());
 
     }
 }

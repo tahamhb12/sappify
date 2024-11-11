@@ -2,19 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Partner;
 use Illuminate\Support\Facades\Http;
 
 class UrLdata
 {
-
-    public function getUrlData($url){
-        if(!$url){
+    public function getUrlData($url)
+    {
+        if (! $url) {
             return null;
         }
-        if(substr($url,0,25)!=='https://apps.shopify.com/'){
+        if (substr($url, 0, 25) !== 'https://apps.shopify.com/') {
             return 'bad link';
-        }else{
+        } else {
             $response = Http::get($url);
         }
         if ($response->failed()) {

@@ -31,19 +31,19 @@ class ShopsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\ImageColumn::make('avatarUrl')->default('images/shop.png')->label("Avatar"),
+                Tables\Columns\ImageColumn::make('avatarUrl')->default('images/shop.png')->label('Avatar'),
                 Tables\Columns\TextColumn::make('name')
-                ->label('App')
-                ->formatStateUsing(function ($state,$record) {
-                    return "<div>
+                    ->label('App')
+                    ->formatStateUsing(function ($state, $record) {
+                        return "<div>
                                 <div style=font-weight:bold>
                                 $state
                                 </div>
                                 <div style=font-size:13px>$record->myshopifyDomain</div>
                             </div>";
-                })
-                ->html()
-                ->searchable(),
+                    })
+                    ->html()
+                    ->searchable(),
                 Tables\Columns\TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
                 Tables\Columns\TextColumn::make('notes')->default('No notes'),
                 Tables\Columns\TextColumn::make('description')->default('No description'),
@@ -61,28 +61,33 @@ class ShopsRelationManager extends RelationManager
                     } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
                         return 'Uninstalled';
                     }
+
                     return 'N/A';
                 })->badge()
-                ->color(function (string $state){
-                    if($state=='Uninstalled') return 'danger';
-                    return 'success';
-                }),
+                    ->color(function (string $state) {
+                        if ($state == 'Uninstalled') {
+                            return 'danger';
+                        }
+
+                        return 'success';
+                    }),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
-/*                 Tables\Actions\AssociateAction::make()->preloadRecordSelect(),
- */            ])
+            /*                 Tables\Actions\AssociateAction::make()->preloadRecordSelect(),
+ */])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
                 $this->dissociateShopAction(),
             ])
             ->bulkActions([
-/*                 Tables\Actions\DeleteBulkAction::make(),
- */            ]);
+            /*                 Tables\Actions\DeleteBulkAction::make(),
+ */]);
     }
+
     protected function dissociateShopAction(): Action
     {
         return Action::make('dissociate')
@@ -94,5 +99,4 @@ class ShopsRelationManager extends RelationManager
             ->requiresConfirmation()
             ->color('danger');
     }
-
 }

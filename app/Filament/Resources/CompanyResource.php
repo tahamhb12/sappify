@@ -6,9 +6,7 @@ use App\Filament\Resources\CompanyResource\Pages;
 use App\Filament\Resources\CompanyResource\RelationManagers\ShopsRelationManager;
 use App\Models\Company;
 use App\Models\Shop;
-use Filament\Forms;
 use Filament\Forms\Components\MultiSelect;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,8 +19,8 @@ class CompanyResource extends Resource
     protected static ?string $model = Company::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?int $navigationSort = 2;
 
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -32,7 +30,7 @@ class CompanyResource extends Resource
                     ->required(),
                 MultiSelect::make('shop_ids')
                     ->label('Select Shop')->required()
-                    ->options(Shop::where('company_id',null)->pluck('name', 'id')->toArray())
+                    ->options(Shop::where('company_id', null)->pluck('name', 'id')->toArray())
                     ->preload(),
             ]);
     }
@@ -63,7 +61,7 @@ class CompanyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ShopsRelationManager::class
+            ShopsRelationManager::class,
         ];
     }
 
@@ -75,5 +73,4 @@ class CompanyResource extends Resource
             'edit' => Pages\EditCompany::route('/{record}/edit'),
         ];
     }
-
 }

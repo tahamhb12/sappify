@@ -2,34 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BillingEvents;
 use App\Models\Partner;
-use App\Models\Shop;
 use App\Models\ShopifyApp;
-use App\Models\ShopifyAppEvent;
 use App\Services\ApiServices;
-use App\Services\ShopUrlData;
-use App\Services\UrLdata;
-use Filament\Facades\Filament;
-use GuzzleHttp\Promise\Create;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Http;
-
-use function Pest\Laravel\json;
 
 class ShopifyAppController extends Controller
 {
     protected $responseData;
+
     protected $apiservices;
 
-    public function __construct(){
+    public function __construct()
+    {
         $partner = Partner::first();
         $this->apiservices = new ApiServices($partner);
     }
 
-    public function App(){
-        $app = ShopifyApp::where('app_id','109166723073')->first();
+    public function App()
+    {
+        $app = ShopifyApp::where('app_id', '109166723073')->first();
         $res = $this->apiservices->getData('
                 {
                     app(id: "gid://partners/App/'.$app->app_id.'"){
@@ -66,17 +57,21 @@ class ShopifyAppController extends Controller
                         }
                     }
                     }');
-            return $res->json();
+
+        return $res->json();
     }
-    public function store(){
+
+    public function store()
+    {
         $this->App();
         $appData = $this->responseData;
         $app = ShopifyApp::create([
             'name' => $appData['app']['name'],
-            'api_key'=> $appData['app']['apiKey'],
-            'partner_id'=> "1"
+            'api_key' => $appData['app']['apiKey'],
+            'partner_id' => '1',
         ]);
         $apps = ShopifyApp::all();
-    return response()->json($apps, 201);
+
+        return response()->json($apps, 201);
     }
 }

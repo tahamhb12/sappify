@@ -3,19 +3,15 @@
 namespace App\Filament\Resources\ShopifyAppResource\Pages;
 
 use App\Filament\Resources\ShopifyAppResource;
-use App\Services\ApiServices;
-use App\Models\Partner;
 use App\Services\UrLdata;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
-
-use Illuminate\Support\Facades\Artisan;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Artisan;
 
 class CreateShopifyApp extends CreateRecord
 {
     protected static string $resource = ShopifyAppResource::class;
-
 
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
@@ -51,26 +47,27 @@ class CreateShopifyApp extends CreateRecord
             'partnerId' => $partnerId,
             'appId' => $AppId,
         ]);
+
         return $record;
     }
 
     protected function afterCreate(): void
     {
-        $urldata = new UrLdata();
+        $urldata = new UrLdata;
         $url = $this->form->getState()['url'];
         $getData = $urldata->getUrlData($url);
-        if($getData && $getData!=='bad link'){
-            $this->record->title=$getData['title'];
-            $this->record->description=$getData['description'];
-            $this->record->image=$getData['image'];
+        if ($getData && $getData !== 'bad link') {
+            $this->record->title = $getData['title'];
+            $this->record->description = $getData['description'];
+            $this->record->image = $getData['image'];
             $this->record->save();
-        }else if(!$getData){
-            '';
-        }else{
+        } elseif (! $getData) {
+
+        } else {
             Notification::make()
-            ->title('bad url.')
-            ->danger()
-            ->send();
+                ->title('bad url.')
+                ->danger()
+                ->send();
         }
     }
 }

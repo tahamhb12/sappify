@@ -11,7 +11,7 @@ class ShopUrlData
     public function getUrlData($url)
     {
 
-        if (!$url) {
+        if (! $url) {
             return null;
         }
 
@@ -20,11 +20,10 @@ class ShopUrlData
         try {
             $response = Http::get($url);
         } catch (\Throwable $th) {
-            Log::error("error", [$th]);
+            Log::error('error', [$th]);
+
             return 'bad link';
         }
-
-
 
         if ($response->failed()) {
             return 'bad link';
@@ -40,9 +39,9 @@ class ShopUrlData
             $property = $match[2];
             $content = $match[3];
 
-            if ($property === 'image:secure_url' && !isset($metadata['image:secure_url'])) {
+            if ($property === 'image:secure_url' && ! isset($metadata['image:secure_url'])) {
                 $metadata['image:secure_url'] = $content;
-            } elseif (!isset($metadata[$property])) {
+            } elseif (! isset($metadata[$property])) {
                 $metadata[$property] = $content;
             }
         }

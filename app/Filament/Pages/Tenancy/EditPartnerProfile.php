@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Filament\Pages\Tenancy;
 
-use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -23,6 +23,7 @@ class EditPartnerProfile extends EditTenantProfile
                 TextInput::make(name: 'api_key')->readOnly(),
             ]);
     }
+
     protected function getHeaderActions(): array
     {
         return [

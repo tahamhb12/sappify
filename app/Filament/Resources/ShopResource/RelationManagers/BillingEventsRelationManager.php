@@ -8,8 +8,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BillingEventsRelationManager extends RelationManager
 {
@@ -46,30 +44,31 @@ class BillingEventsRelationManager extends RelationManager
             'SUBSCRIPTION_CHARGE_UNFROZEN' => 'Subscription Unfrozen',
             'USAGE_CHARGE_APPLIED' => 'Usage Charge Applied',
         ];
+
         return $table
             ->recordTitleAttribute('type')
             ->columns([
                 Tables\Columns\TextColumn::make('type')
-                ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;
-                }),
+                    ->formatStateUsing(function ($state) use ($eventTypeMapping) {
+                        return $eventTypeMapping[$state] ?? $state;
+                    }),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('amount')
-                ->formatStateUsing(function($record,$state){
-                    return 
-                    "
+                    ->formatStateUsing(function ($record, $state) {
+                        return
+                        "
                     <div>$state <span> $record->currency</span></div>
                     ";
-                })->html(),
+                    })->html(),
                 Tables\Columns\TextColumn::make('billingOn')->default('No billing Date'),
                 Tables\Columns\TextColumn::make('app.name'),
                 Tables\Columns\TextColumn::make('isTest')->label('is Test'),
                 Tables\Columns\TextColumn::make('occurred_at')->date()->sortable(),
             ])
             ->filters([
-                SelectFilter::make("type")
-                ->options($eventTypeMapping)
-                ->multiple(),
+                SelectFilter::make('type')
+                    ->options($eventTypeMapping)
+                    ->multiple(),
             ])
             ->headerActions([
             ])

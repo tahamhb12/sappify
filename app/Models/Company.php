@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model
 {
     use HasFactory;
-    protected $fillable= ["name","partner_id"];
+
+    protected $fillable = ['name', 'partner_id'];
 
     protected static function boot()
     {
         parent::boot();
-        
+
         static::deleting(function ($company) {
             foreach ($company->shops as $shop) {
                 $shop->company_id = null;
@@ -22,11 +23,13 @@ class Company extends Model
         });
     }
 
-    public function shops(){
+    public function shops()
+    {
         return $this->hasMany(Shop::class);
     }
-    public function partner(){
+
+    public function partner()
+    {
         return $this->belongsTo(Partner::class);
     }
-
 }

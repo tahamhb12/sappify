@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Partner;
-use App\Models\ShopifyApp;
 use App\Services\ApiServices;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Auth;
 
 class SyncPartnerApp extends Command
 {
@@ -33,22 +31,22 @@ class SyncPartnerApp extends Command
         $partnerId = intval($this->argument('partnerId'));
         $appId = intval($this->argument('appId'));
 
-//     $this->info(string: "Sync AppId $appId in Partner $partnerId");
+        //     $this->info(string: "Sync AppId $appId in Partner $partnerId");
 
-        $partner = Partner::where("partner_id",$partnerId)->first();
-        if (!$partner) {
-            $this->error("partner not found");
+        $partner = Partner::where('partner_id', $partnerId)->first();
+        if (! $partner) {
+            $this->error('partner not found');
+
             return 1;
         }
 
         $api = new ApiServices($partner);
         $response = $api->getApp($appId);
 
-
         $appData = $response->json('data');
-        if($appData && $appData['app']!==null){
+        if ($appData && $appData['app'] !== null) {
             $this->info($appData['app']['apiKey']);
-        }else{
+        } else {
             return 1;
         }
     }

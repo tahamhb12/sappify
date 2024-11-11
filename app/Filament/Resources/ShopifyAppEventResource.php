@@ -3,13 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopifyAppEventResource\Pages;
-use App\Filament\Resources\ShopifyAppEventResource\RelationManagers;
-use App\Models\Shop;
 use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -22,22 +18,16 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter as Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
-use Filament\Tables\Filters\DateFilter;
-
 
 class ShopifyAppEventResource extends Resource
 {
     protected static ?string $model = ShopifyAppEvent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-    protected static ?string $navigationGroup = "Events";
+
+    protected static ?string $navigationGroup = 'Events';
 
     protected static ?string $modelLabel = 'App Events';
-
-
 
     public static function form(Form $form): Form
     {
@@ -67,8 +57,8 @@ class ShopifyAppEventResource extends Resource
 
         return $form
             ->schema([
-                Select::make('app_id')->relationship("app","app_id"),
-                Select::make('shop_id')->relationship("shops","shop_id"),
+                Select::make('app_id')->relationship('app', 'app_id'),
+                Select::make('shop_id')->relationship('shops', 'shop_id'),
                 Select::make('type')->options($eventTypeMapping),
                 TextInput::make('occurred_at'),
             ]);
@@ -87,10 +77,10 @@ class ShopifyAppEventResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('type')
-                ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state;
-                })
-                ->searchable(),
+                    ->formatStateUsing(function ($state) use ($eventTypeMapping) {
+                        return $eventTypeMapping[$state] ?? $state;
+                    })
+                    ->searchable(),
                 TextColumn::make('shop.name')->searchable(),
                 TextColumn::make('reason'),
                 TextColumn::make('description'),
@@ -98,22 +88,22 @@ class ShopifyAppEventResource extends Resource
                 TextColumn::make('occurred_at')->date()->sortable(),
             ])
             ->filters([
-                SelectFilter::make("type")
-                ->options($eventTypeMapping)
-                ->multiple(),
-                SelectFilter::make("app_id")
-                ->options(ShopifyApp::all()->pluck('name',"id"))->label("App"),
+                SelectFilter::make('type')
+                    ->options($eventTypeMapping)
+                    ->multiple(),
+                SelectFilter::make('app_id')
+                    ->options(ShopifyApp::all()->pluck('name', 'id'))->label('App'),
                 Filter::make('occurred_at')
-                ->label('Occurred At')
-                ->form([
-                    DatePicker::make('start_date')->label('Start Date'),
-                    DatePicker::make('end_date')->label('End Date'),
-                ])
-                ->query(function ($query, array $data) {
-                    return $query
-                        ->when($data['start_date'], fn ($query, $date) => $query->whereDate('occurred_at', '>=', $date))
-                        ->when($data['end_date'], fn ($query, $date) => $query->whereDate('occurred_at', '<=', $date));
-                }),
+                    ->label('Occurred At')
+                    ->form([
+                        DatePicker::make('start_date')->label('Start Date'),
+                        DatePicker::make('end_date')->label('End Date'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['start_date'], fn ($query, $date) => $query->whereDate('occurred_at', '>=', $date))
+                            ->when($data['end_date'], fn ($query, $date) => $query->whereDate('occurred_at', '<=', $date));
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -121,7 +111,8 @@ class ShopifyAppEventResource extends Resource
             ->bulkActions([]);
     }
 
-     public static function infolist(Infolist $infolist): Infolist{
+    public static function infolist(Infolist $infolist): Infolist
+    {
         $eventTypeMapping = [
             'CREDIT_APPLIED' => 'Credit Applied',
             'CREDIT_FAILED' => 'Credit Failed',
@@ -145,22 +136,23 @@ class ShopifyAppEventResource extends Resource
             'SUBSCRIPTION_CHARGE_UNFROZEN' => 'Subscription Unfrozen',
             'USAGE_CHARGE_APPLIED' => 'Usage Charge Applied',
         ];
+
         return $infolist
-        ->schema(components: [
-            ComponentsSection::make()->schema([
-                TextEntry::make('type')
-                ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                    return $eventTypeMapping[$state] ?? $state; 
-                }),
-                TextEntry::make('shop.name'),
-                TextEntry::make('reason'),
-                TextEntry::make('description'),
-                TextEntry::make('app.name'),
-                TextEntry::make('occurred_at')->date(),
-            ]
-            )
-        ]);
-     }
+            ->schema(components: [
+                ComponentsSection::make()->schema([
+                    TextEntry::make('type')
+                        ->formatStateUsing(function ($state) use ($eventTypeMapping) {
+                            return $eventTypeMapping[$state] ?? $state;
+                        }),
+                    TextEntry::make('shop.name'),
+                    TextEntry::make('reason'),
+                    TextEntry::make('description'),
+                    TextEntry::make('app.name'),
+                    TextEntry::make('occurred_at')->date(),
+                ]
+                ),
+            ]);
+    }
 
     public static function getRelations(): array
     {

@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Partner;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
 class PartnerPolicy
@@ -14,7 +13,7 @@ class PartnerPolicy
      */
     public function viewAny(User $user): bool
     {
-        return Auth::check()&& Auth()->user()->role == "admin" ? true : false;
+        return Auth::check() && Auth()->user()->role == 'admin' ? true : false;
     }
 
     /**
@@ -22,7 +21,7 @@ class PartnerPolicy
      */
     public function view(User $user, Partner $partner): bool
     {
-return true;
+        return true;
     }
 
     /**
@@ -30,9 +29,9 @@ return true;
      */
     public function create(User $user): bool
     {
-/*         if(Auth::user()->role == "user"){
-            $partner->user_id= Auth::user()->id;
-        } */
+        /*         if(Auth::user()->role == "user"){
+                    $partner->user_id= Auth::user()->id;
+                } */
         return true;
     }
 
@@ -41,7 +40,7 @@ return true;
      */
     public function update(User $user, Partner $partner): bool
     {
-        return $partner->user_id== $user->id;
+        return $partner->user_id == $user->id;
     }
 
     /**
@@ -57,7 +56,7 @@ return true;
      */
     public function restore(User $user, Partner $partner): bool
     {
-return true;
+        return true;
     }
 
     /**
@@ -65,6 +64,6 @@ return true;
      */
     public function forceDelete(User $user, Partner $partner): bool
     {
-return true;
+        return true;
     }
 }

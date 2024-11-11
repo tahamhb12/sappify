@@ -8,8 +8,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ShopsRelationManager extends RelationManager
 {
@@ -31,20 +29,20 @@ class ShopsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
-                ->default('images/shop.png')
-                ->label("Avatar"),
+                    ->default('images/shop.png')
+                    ->label('Avatar'),
                 Tables\Columns\TextColumn::make('name')
-                ->label('App')
-                ->formatStateUsing(function ($state,$record) {
-                    return "<div>
+                    ->label('App')
+                    ->formatStateUsing(function ($state, $record) {
+                        return "<div>
                                 <div style=font-weight:bold>
                                 $state
                                 </div>
                                 <div style=font-size:13px>$record->myshopifyDomain</div>
                             </div>";
-                })
-                ->html()
-                ->searchable(),
+                    })
+                    ->html()
+                    ->searchable(),
                 Tables\Columns\TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
                 Tables\Columns\TextColumn::make('notes')->default('No notes'),
                 Tables\Columns\TextColumn::make('description')->default('No description')->limit(19),
@@ -62,13 +60,17 @@ class ShopsRelationManager extends RelationManager
                     } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
                         return 'Uninstalled';
                     }
+
                     return 'N/A';
                 })->badge()
-                ->color(function (string $state){
-                    if($state=='Uninstalled') return 'danger';
-                    return 'success';
-                }),
-           ])
+                    ->color(function (string $state) {
+                        if ($state == 'Uninstalled') {
+                            return 'danger';
+                        }
+
+                        return 'success';
+                    }),
+            ])
             ->filters([
                 //
             ])

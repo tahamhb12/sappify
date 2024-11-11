@@ -1,54 +1,51 @@
 <?php
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopResource\Pages;
 use App\Filament\Resources\ShopResource\RelationManagers\AppEventsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\AppsRelationManager;
-use App\Filament\Resources\ShopResource\RelationManagers\BillingEventsRelationManager ;
-use App\Models\Partner;
+use App\Filament\Resources\ShopResource\RelationManagers\BillingEventsRelationManager;
 use App\Models\Shop;
 use App\Models\ShopifyAppEvent;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
-use Filament\Infolists\Components\ImageEntry;
-use Filament\Tables\Actions\Action;
-use Filament\Forms;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Group as ComponentsGroup;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section as ComponentsSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Infolists\Components\Section as ComponentsSection;
-use Illuminate\Http\RedirectResponse;
 
 class ShopResource extends Resource
 {
     protected static ?string $model = Shop::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
-    protected static ?int $navigationSort = 3;
 
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make("")->schema([
-                    FileUpload::make('avatarUrl')->disk('public')->directory('images')->label("Avatar"),
+                Section::make('')->schema([
+                    FileUpload::make('avatarUrl')->disk('public')->directory('images')->label('Avatar'),
                     TextInput::make('title')->placeholder('Add title'),
                     TextInput::make('description')->placeholder('Add Description'),
-                    TextInput::make('notes')->placeholder( 'Add Note'),
+                    TextInput::make('notes')->placeholder('Add Note'),
                     TagsInput::make('tags')->separator(','),
-                ])
+                ]),
             ])->columns(1);
     }
 
@@ -57,20 +54,20 @@ class ShopResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
-                ->default('images/shop.png')
-                ->label("Avatar"),
+                    ->default('images/shop.png')
+                    ->label('Avatar'),
                 TextColumn::make('name')
-                ->label('App')
-                ->formatStateUsing(function ($state,$record) {
-                    return "<div>
+                    ->label('App')
+                    ->formatStateUsing(function ($state, $record) {
+                        return "<div>
                                 <div style=font-weight:bold>
                                 $state
                                 </div>
                                 <div style=font-size:13px>$record->myshopifyDomain</div>
                             </div>";
-                })
-                ->html()
-                ->searchable(),
+                    })
+                    ->html()
+                    ->searchable(),
                 TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
                 TextColumn::make('notes')->default('No notes'),
                 TextColumn::make('description')->default('No description')->limit(19),
@@ -88,13 +85,17 @@ class ShopResource extends Resource
                     } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
                         return 'Uninstalled';
                     }
+
                     return 'N/A';
                 })->badge()
-                ->color(function (string $state){
-                    if($state=='Uninstalled') return 'danger';
-                    return 'success';
-                }),
-           ])
+                    ->color(function (string $state) {
+                        if ($state == 'Uninstalled') {
+                            return 'danger';
+                        }
+
+                        return 'success';
+                    }),
+            ])
             ->filters([
                 //
             ])
@@ -103,7 +104,7 @@ class ShopResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Action::make('visitLink')
                     ->label('Visit')
-                    ->url(fn ($record) => 'https://'.$record->myshopifyDomain)->openUrlInNewTab()
+                    ->url(fn ($record) => 'https://'.$record->myshopifyDomain)->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -111,23 +112,22 @@ class ShopResource extends Resource
             ]);
     }
 
-
     public static function infolist(Infolist $infolist): Infolist
     {
         $partner = Filament::getTenant();
 
         return $infolist
-        ->schema(components: [
+            ->schema(components: [
                 ComponentsGroup::make()->schema([
                     ComponentsSection::make('Image')->schema([
-                        ImageEntry::make('image')->default('images/shop.png')->label("Avatar")->size(50)->width('100%')
-                        ->alignCenter()
+                        ImageEntry::make('image')->default('images/shop.png')->label('Avatar')->size(50)->width('100%')
+                            ->alignCenter(),
                     ])->collapsible(),
                     ComponentsSection::make()->schema([
-                        TextEntry::make('name')->label("Store Name")
-                        ->label("Store name")
-                        ->html()
-                        ->formatStateUsing(fn ($state, $record) => '<a href="https://' . $record->myshopifyDomain  . '" target="_blank" class="text-primary-600 underline">'. $record->name .'</a>'),
+                        TextEntry::make('name')->label('Store Name')
+                            ->label('Store name')
+                            ->html()
+                            ->formatStateUsing(fn ($state, $record) => '<a href="https://'.$record->myshopifyDomain.'" target="_blank" class="text-primary-600 underline">'.$record->name.'</a>'),
 
                     ]),
                 ]),
@@ -139,8 +139,8 @@ class ShopResource extends Resource
                     TextEntry::make('status')->default(function ($record) {
                         $type = ShopifyAppEvent::where('shop_id', $record->id)
                             ->where(function ($query) {
-                            $query->where('type', 'RELATIONSHIP_INSTALLED')
-                                ->orWhere('type', 'RELATIONSHIP_UNINSTALLED');
+                                $query->where('type', 'RELATIONSHIP_INSTALLED')
+                                    ->orWhere('type', 'RELATIONSHIP_UNINSTALLED');
                             })
                             ->orderBy('occurred_at', 'desc')
                             ->first()
@@ -150,18 +150,22 @@ class ShopResource extends Resource
                         } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
                             return 'Uninstalled';
                         }
+
                         return 'N/A';
-                        })->badge()
-                        ->color(function (string $state){
-                            if($state=='Uninstalled') return 'danger';
+                    })->badge()
+                        ->color(function (string $state) {
+                            if ($state == 'Uninstalled') {
+                                return 'danger';
+                            }
+
                             return 'success';
                         }),
-                        TextEntry::make('myshopifyDomain')
-                        ->label("")
+                    TextEntry::make('myshopifyDomain')
+                        ->label('')
                         ->html()
-                        ->formatStateUsing(fn ($state, $record) => '<a href="https://partners.shopify.com/' . $partner->partner_id . '/stores/' . preg_replace('/\D/', '', $record->shop_id) . '" target="_blank" class="text-primary-600 underline">View Store</a>'),
-                ])->columnSpan(3)
-        ])->columns(4);
+                        ->formatStateUsing(fn ($state, $record) => '<a href="https://partners.shopify.com/'.$partner->partner_id.'/stores/'.preg_replace('/\D/', '', $record->shop_id).'" target="_blank" class="text-primary-600 underline">View Store</a>'),
+                ])->columnSpan(3),
+            ])->columns(4);
     }
 
     public static function getRelations(): array
@@ -169,7 +173,7 @@ class ShopResource extends Resource
         return [
             AppEventsRelationManager::class,
             AppsRelationManager::class,
-            BillingEventsRelationManager::class
+            BillingEventsRelationManager::class,
         ];
     }
 
