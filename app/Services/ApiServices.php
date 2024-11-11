@@ -91,7 +91,8 @@ class ApiServices
                 }');
                 $UrlData = new ShopUrlData;
                 if ($res->json('data.app.events.edges')) {
-                    for ($i = 0; $i < count($res->json('data.app.events.edges')); $i++) {
+                    $size = count($res->json('data.app.events.edges'));
+                    for ($i = 0; $i < $size; $i++) {
 
                         $data = $res->json("data.app.events.edges.$i.node");
                         $Shop = collect([
@@ -129,10 +130,10 @@ class ApiServices
                         ]);
                         $shop->apps()->syncWithoutDetaching([$ShopifyApp->id]);
                     }
+                    $lastIndex = count($res->json('data.app.events.edges')) - 1;
+                    $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor");
                 }
                 $hasNextPage = $res->json('data.app.events.pageInfo.hasNextPage');
-                $lastIndex = count($res->json('data.app.events.edges')) - 1;
-                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor");
             }
         }
     }
@@ -202,7 +203,8 @@ class ApiServices
 
                 $UrlData = new ShopUrlData;
                 if ($res->json('data.app.events.edges')) {
-                    for ($i = 0; $i < count($res->json('data.app.events.edges')); $i++) {
+                    $size = count($res->json('data.app.events.edges'));
+                    for ($i = 0; $i < $size; $i++) {
 
                         $data = $res->json("data.app.events.edges.$i.node");
                         $Shop = collect([
@@ -248,10 +250,10 @@ class ApiServices
                         ]);
                         $shop->apps()->syncWithoutDetaching([$ShopifyApp->id]);
                     }
+                    $lastIndex = count($res->json('data.app.events.edges')) - 1;
+                    $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor");
                 }
                 $hasNextPage = $res->json('data.app.events.pageInfo.hasNextPage');
-                $lastIndex = count($res->json('data.app.events.edges')) - 1;
-                $endCursor = $res->json("data.app.events.edges.$lastIndex.cursor");
             }
         }
     }
