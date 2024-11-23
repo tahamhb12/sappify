@@ -28,11 +28,11 @@ class SyncPartnerAppEvents extends Command
      */
     public function handle()
     {
-        $partnerId = $this->argument('partnerId');
-        $appId = $this->argument('appId');
+        $partner_id = $this->argument('partnerId');
+        $app_id = $this->argument('appId');
 
-        $partner = Partner::where('partner_id', $partnerId)->first();
-        $ShopifyApp = ShopifyApp::where('app_id', $appId)->first();
+        $partner = Partner::where('partner_id', $partner_id)->first();
+        $ShopifyApp = ShopifyApp::where('app_id', $app_id)->first();
 
         $api = new ApiServices($partner);
         $api->getEvents($ShopifyApp);
