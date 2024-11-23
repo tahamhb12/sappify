@@ -14,15 +14,15 @@ class EditShopifyApp extends EditRecord
 
     protected function afterSave(): void
     {
-        $urldata = new UrLdata;
+        $url_data = new UrLdata;
         $url = $this->form->getState()['url'];
-        $getData = $urldata->getUrlData($url);
-        if ($getData && $getData !== 'bad link') {
-            $this->record->title = $getData['title'];
-            $this->record->description = $getData['description'];
-            $this->record->image = $getData['image'];
+        $get_data = $url_data->getUrlData($url);
+        if ($get_data && $get_data !== 'bad link') {
+            $this->record->title = $get_data['title'];
+            $this->record->description = $get_data['description'];
+            $this->record->image = $get_data['image'];
             $this->record->save();
-        } elseif (! $getData) {
+        } elseif (!$get_data) {
 
         } else {
             Notification::make()

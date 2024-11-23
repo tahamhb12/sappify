@@ -6,12 +6,15 @@ use App\Models\ShopifyAppEvent;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ShopsRelationManager extends RelationManager
 {
     protected static string $relationship = 'shops';
+
 
     public function form(Form $form): Form
     {
@@ -25,51 +28,37 @@ class ShopsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+
         return $table
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->default('images/shop.png')
-                    ->label('Avatar'),
+                    ->label('Avatar')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('App')
-                    ->formatStateUsing(function ($state, $record) {
-                        return "<div>
-                                <div style=font-weight:bold>
-                                $state
-                                </div>
-                                <div style=font-size:13px>$record->myshopifyDomain</div>
-                            </div>";
-                    })
-                    ->html()
+                    ->description(fn($record)=>$record->myshopifyDomain)
                     ->searchable(),
-                Tables\Columns\TagsColumn::make('tags')->default('No Tags Yet')->label('Tags'),
+                Tables\Columns\TextColumn::make('tags')->default('No Tags Yet')->label('Tags')->badge(),
                 Tables\Columns\TextColumn::make('notes')->default('No notes'),
                 Tables\Columns\TextColumn::make('description')->default('No description')->limit(19),
-                Tables\Columns\TextColumn::make('status')->default(function ($record) {
-                    $type = ShopifyAppEvent::where('shop_id', $record->id)
-                        ->where(function ($query) {
-                            $query->where('type', 'RELATIONSHIP_INSTALLED')
-                                ->orWhere('type', 'RELATIONSHIP_UNINSTALLED');
-                        })
-                        ->orderBy('occurred_at', 'desc')
-                        ->first()
-                        ?->type ?? 'N/A';
-                    if ($type === 'RELATIONSHIP_INSTALLED') {
-                        return 'Installed';
-                    } elseif ($type === 'RELATIONSHIP_UNINSTALLED') {
-                        return 'Uninstalled';
+                Tables\Columns\TextColumn::make('apps.0.pivot.status') //will get fixed later
+                ->formatStateUsing(function($state){
+                    switch($state){
+                        case 'RELATIONSHIP_INSTALLED':
+                            return 'Installed';
+                        case 'RELATIONSHIP_UNINSTALLED':
+                            return 'Uninstalled';
+                        case 'RELATIONSHIP_DEACTIVATED':
+                            return 'Deactivated';
+                        case 'RELATIONSHIP_REACTIVATED':
+                            return 'Reactivated';
+                        default:
+                            return 'Unknown';
                     }
-
-                    return 'N/A';
-                })->badge()
-                    ->color(function (string $state) {
-                        if ($state == 'Uninstalled') {
-                            return 'danger';
-                        }
-
-                        return 'success';
-                    }),
+                })
+                ->badge()
+                ->color(fn($state)=> $state=='RELATIONSHIP_UNINSTALLED' ? 'danger' :($state == 'RELATIONSHIP_INSTALLED'? 'success' : 'warning'))
             ])
             ->filters([
                 //

@@ -7,6 +7,7 @@ use App\Filament\Resources\CompanyResource\RelationManagers\ShopsRelationManager
 use App\Models\Company;
 use App\Models\Shop;
 use Filament\Forms\Components\MultiSelect;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -28,10 +29,6 @@ class CompanyResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required(),
-                MultiSelect::make('shop_ids')
-                    ->label('Select Shop')->required()
-                    ->options(Shop::where('company_id', null)->pluck('name', 'id')->toArray())
-                    ->preload(),
             ]);
     }
 

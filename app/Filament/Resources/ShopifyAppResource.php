@@ -17,6 +17,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Str;
@@ -46,63 +47,9 @@ class ShopifyAppResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('image'),
                 TextColumn::make('name')
                     ->label('App')
-                    ->formatStateUsing(function ($state, $record) {
-                        $name = strtoupper(substr($state, 0, 1));
-                        $colorMapping = [
-                            'A' => '#FF5733', // Red-Orange
-                            'B' => '#33FF57', // Green
-                            'C' => '#3357FF', // Blue
-                            'D' => '#FF33A1', // Pink
-                            'E' => '#33FFA1', // Teal
-                            'F' => '#FF33FF', // Magenta
-                            'G' => '#FFD133', // Gold
-                            'H' => '#FF8C33', // Dark Orange
-                            'I' => '#33FF8C', // Light Green
-                            'J' => '#FF3333', // Red
-                            'K' => '#3366FF', // Light Blue
-                            'L' => '#FF33D1', // Light Pink
-                            'M' => '#33D1FF', // Light Cyan
-                            'N' => '#FFB833', // Light Orange
-                            'O' => '#FF5733', // Coral
-                            'P' => '#FF33B2', // Fuchsia
-                            'Q' => '#33FF57', // Lime Green
-                            'R' => '#5733FF', // Indigo
-                            'S' => '#FF33C7', // Rose
-                            'T' => '#B833FF', // Purple
-                            'U' => '#33B8FF', // Sky Blue
-                            'V' => '#FF33C7', // Pinkish Purple
-                            'W' => '#FFAC33', // Apricot
-                            'X' => '#33FF99', // Light Sea Green
-                            'Y' => '#FFD700', // Golden Yellow
-                            'Z' => '#FF45F0', // Neon Pink
-                        ];
-                        $bgColor = $colorMapping[$name];
-                        $title = Str::limit($record->title, 30);
-
-                        return $record->image ?
-                        "<div style='display: flex; align-items: center;'>
-                    <div style='display:flex; justify-content:center; align-items:center; margin-left:-5px; width: 33px; height: 33px; border-radius: 8px; color: white; font-weight: bold; margin-right: 8px;'>
-                        <img src=$record->image>
-                    </div>
-                    <p style='display:flex; flex-direction: column;'>
-                        $state
-                        <span style='font-size:13px'>$title</span>
-                    </p>
-                </div>"
-                        :
-                                "<div style='display: flex; align-items: center;'>
-                                <div style='display:flex; justify-content:center; align-items:center; margin-left:-5px; width: 33px; height: 33px; border-radius: 8px; background-color: $bgColor; color: white; font-weight: bold; margin-right: 8px;'>
-                                    $name
-                                </div>
-                                <p style='display:flex; flex-direction: column;'>
-                                    $state
-                                    <span style='font-size:13px'>$record->title</span>
-                                </p>
-                            </div>";
-                    })
-                    ->html()
                     ->searchable(),
                 TextColumn::make('api_key'),
                 TextColumn::make('description')->default('No Description')->limit(20),
@@ -131,7 +78,8 @@ class ShopifyAppResource extends Resource
                 ComponentsGroup::make()->schema([
                     ComponentsSection::make('Image')->schema([
                         ImageEntry::make('image')->label('Avatar')
-                            ->alignCenter(),
+                            ->alignCenter()
+                            ->label(false),
                     ])->collapsible(),
                     ComponentsSection::make()->schema([
                         TextEntry::make('name')->label('App Name'),

@@ -15,22 +15,22 @@ class CreateShopifyApp extends CreateRecord
 
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
-        $partnerId = Filament::getTenant()->partner_id;
-        $AppId = $data['app_id'];
+        $partner_id = Filament::getTenant()->partner_id;
+        $app_id = $data['app_id'];
 
-        $getApp = Artisan::call('app:sync-partner-app', [
-            'partnerId' => $partnerId,
-            'appId' => $AppId,
+        $get_app = Artisan::call('app:sync-partner-app', [
+            'partnerId' => $partner_id,
+            'appId' => $app_id,
         ]);
-        $apiKey = trim(Artisan::output());
+        $api_key = trim(Artisan::output());
 
-        if ($getApp == 1) {
+        if ($get_app == 1) {
             Notification::make()
                 ->title('Failed to sync the app. App info incorrect')
                 ->danger()
                 ->send();
             $this->halt();
-        } elseif ($data['api_key'] !== $apiKey) {
+        } elseif ($data['api_key'] !== $api_key) {
             Notification::make()
                 ->title('Failed to sync the app. API key incorrect.')
                 ->danger()
@@ -44,8 +44,8 @@ class CreateShopifyApp extends CreateRecord
             ->success()
             ->send();
         Artisan::queue('app:sync-partner-app-events', [
-            'partnerId' => $partnerId,
-            'appId' => $AppId,
+            'partnerId' => $partner_id,
+            'appId' => $app_id,
         ]);
 
         return $record;
@@ -53,15 +53,15 @@ class CreateShopifyApp extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $urldata = new UrLdata;
+        $url_data = new UrLdata;
         $url = $this->form->getState()['url'];
-        $getData = $urldata->getUrlData($url);
-        if ($getData && $getData !== 'bad link') {
-            $this->record->title = $getData['title'];
-            $this->record->description = $getData['description'];
-            $this->record->image = $getData['image'];
+        $get_data = $url_data->getUrlData($url);
+        if ($get_data && $get_data !== 'bad link') {
+            $this->record->title = $get_data['title'];
+            $this->record->description = $get_data['description'];
+            $this->record->image = $get_data['image'];
             $this->record->save();
-        } elseif (! $getData) {
+        } elseif (!$get_data) {
 
         } else {
             Notification::make()

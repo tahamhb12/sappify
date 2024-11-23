@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('app_id')->references('id')->on('shopify_apps')->cascadeOnDelete();
             $table->foreignId('shop_id')->references('id')->on('shops')->cascadeOnDelete();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
 

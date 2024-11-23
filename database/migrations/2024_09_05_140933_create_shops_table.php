@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('image')->nullable();
             $table->foreignId('partner_id')->references('id')->on('partners')->cascadeOnDelete();
-            $table->foreignId('company_id')->nullable()->references('id')->on('companies');
+            $table->foreignId('company_id')->nullable()->references('id')->on('companies')->nullOnDelete();
             $table->timestamps();
         });
     }

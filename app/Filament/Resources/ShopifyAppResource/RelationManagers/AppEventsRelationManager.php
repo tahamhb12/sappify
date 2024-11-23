@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ShopifyAppResource\RelationManagers;
 
+use App\Models\ShopifyAppEvent;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -25,20 +26,11 @@ class AppEventsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        $eventTypeMapping = [
-            'RELATIONSHIP_DEACTIVATED' => 'App Deactivated',
-            'RELATIONSHIP_INSTALLED' => 'App Installed',
-            'RELATIONSHIP_REACTIVATED' => 'App Reactivated',
-            'RELATIONSHIP_UNINSTALLED' => 'App Uninstalled',
-        ];
 
         return $table
             ->recordTitleAttribute('type')
             ->columns([
-                Tables\Columns\TextColumn::make('type')
-                    ->formatStateUsing(function ($state) use ($eventTypeMapping) {
-                        return $eventTypeMapping[$state] ?? $state;
-                    }),
+                Tables\Columns\TextColumn::make('type_label')->label('Type'),
                 Tables\Columns\TextColumn::make('shop.name')->searchable(),
                 Tables\Columns\TextColumn::make('reason')->default('No reason'),
                 Tables\Columns\TextColumn::make('description')->default('No description'),
@@ -46,7 +38,7 @@ class AppEventsRelationManager extends RelationManager
             ])
             ->filters([
                 SelectFilter::make('type')
-                    ->options($eventTypeMapping)
+                    ->options(ShopifyAppEvent::$EVENT_TYPE_MAPPING)
                     ->multiple(),
             ])
             ->headerActions([

@@ -38,6 +38,7 @@ class ShopifyApp extends Model
 
     public function shops()
     {
-        return $this->belongsToMany(Shop::class, 'app_shop', 'app_id', 'shop_id');
+        return $this->belongsToMany(Shop::class, 'app_shop', 'app_id', 'shop_id')
+        ->withPivot('status');
     }
 }

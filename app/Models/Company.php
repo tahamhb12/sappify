@@ -11,17 +11,6 @@ class Company extends Model
 
     protected $fillable = ['name', 'partner_id'];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($company) {
-            foreach ($company->shops as $shop) {
-                $shop->company_id = null;
-                $shop->save();
-            }
-        });
-    }
 
     public function shops()
     {
