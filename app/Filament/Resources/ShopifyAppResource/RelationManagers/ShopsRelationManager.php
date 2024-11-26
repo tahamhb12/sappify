@@ -42,7 +42,7 @@ class ShopsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('tags')->default('No Tags Yet')->label('Tags')->badge(),
                 Tables\Columns\TextColumn::make('notes')->default('No notes'),
                 Tables\Columns\TextColumn::make('description')->default('No description')->limit(19),
-                Tables\Columns\TextColumn::make('apps.0.pivot.status') //will get fixed later
+                Tables\Columns\TextColumn::make('pivot.status')
                 ->formatStateUsing(function($state){
                     switch($state){
                         case 'RELATIONSHIP_INSTALLED':
