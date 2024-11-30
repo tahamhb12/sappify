@@ -41,4 +41,8 @@ class ShopifyApp extends Model
         return $this->belongsToMany(Shop::class, 'app_shop', 'app_id', 'shop_id')
         ->withPivot('status');
     }
+
+    public function affiliateProgram(){
+        return $this->hasOne(AffiliateProgram::class,'app_id');
+    }
 }
