@@ -33,4 +33,7 @@ class Partner extends Model
     {
         return $this->hasMany(Company::class);
     }
+    public function affiliatePrograms(){
+        return $this->hasMany(AffiliateProgram::class);
+    }
 }
