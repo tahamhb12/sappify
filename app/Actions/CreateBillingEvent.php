@@ -22,13 +22,13 @@ class CreateBillingEvent
 
     public function createBillingEvent(){
         $billing_event = BillingEvents::firstOrCreate([
-            'event_id' => $this->billing_event['charge']['id'],
+            'event_id' => substr($this->billing_event['type'], 0, 6) === 'CREDIT' ? $this->billing_event['appCredit']['id'] : $this->billing_event['charge']['id'],
             'type' => $this->billing_event['type'],
-            'amount' => $this->billing_event['charge']['amount']['amount'],
-            'currency' => $this->billing_event['charge']['amount']['currencyCode'],
+            'amount' => substr($this->billing_event['type'], 0, 6) === 'CREDIT' ? $this->billing_event['appCredit']['amount']['amount'] : $this->billing_event['charge']['amount']['amount'],
+            'currency' => substr($this->billing_event['type'], 0, 6) === 'CREDIT' ? $this->billing_event['appCredit']['amount']['currencyCode'] : $this->billing_event['charge']['amount']['currencyCode'],
             'billingOn' => substr($this->billing_event['type'], 0, 12) === 'SUBSCRIPTION' ? $this->billing_event['charge']["billingOn"] : null,
-            'name' => $this->billing_event['charge']["name"],
-            'isTest' => $this->billing_event['charge']['test'],
+            'name' => substr($this->billing_event['type'], 0, 6) === 'CREDIT' ? $this->billing_event['appCredit']['name'] : $this->billing_event['charge']['name'],
+            'isTest' => substr($this->billing_event['type'], 0, 6) === 'CREDIT' ? $this->billing_event['appCredit']['test'] : $this->billing_event['charge']['test'],
             'app_id' => $this->shopify_app->id,
             'partner_id' => $this->shopify_app->partner_id,
             'shop_id' => $this->shop_id,
