@@ -43,6 +43,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         'role',
     ];
 
+    public function affiliatePrograms(){
+        return $this->belongsToMany(AffiliateProgram::class,'affiliate_user');
+    }
+
     public function partners()
     {
         return $this->hasMany(Partner::class);
@@ -62,6 +66,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->hasMany(Shop::class);
     }
+
+
+
 
     /**
      * The attributes that should be hidden for serialization.

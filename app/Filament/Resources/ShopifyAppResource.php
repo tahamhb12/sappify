@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopifyAppResource\Pages;
+use App\Filament\Resources\ShopifyAppResource\RelationManagers\AffiliateProgramRelationManager;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers\AppEventsRelationManager;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers\BillingEventsRelationManager;
 use App\Filament\Resources\ShopifyAppResource\RelationManagers\ShopsRelationManager;

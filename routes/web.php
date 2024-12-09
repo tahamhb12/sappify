@@ -1,16 +1,15 @@
 <?php
 
+use App\AffiliatePages\RegsiterAffiliate;
+use App\Filament\Resources\AffiliateProgramResource\Pages\AffiliateRequest;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ShopifyAppController;
 use App\Http\Controllers\ShopifyAppEventController;
-use App\Http\Middleware\AffiliateCheck;
-use App\Http\Middleware\RestrictNonAdminAccess;
 use Illuminate\Support\Facades\Route;
 
-
-    Route::get('/', function () {
-        return view('welcome');
-    });
+Route::get('/', function () {
+    return view('welcome');
+});
 /*     Route::get('/shopify/app', [ShopifyAppController::class, 'App']);
     Route::get('/shopify/test', [ShopifyAppController::class, 'test']);
 
@@ -20,7 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::fallback(function () {
     return redirect('/admin');
 });
-Route::get('/affiliate/request/{app_id}/{unique_id}', [AffiliateController::class, 'showAffiliateRequest']);
-Route::get('/affiliate/register/{app_id}/{unique_id}', [AffiliateController::class, 'affiliateRegisterPage'])->name('affiliate.registerPage');;
-Route::post('/affiliate/register', [AffiliateController::class, 'register'])->name('affiliate.register');;
+/* Route::get('/affiliate/request/{app_id}/{unique_id}', [AffiliateController::class, 'showAffiliateRequest']);
+ */
+Route::post('/affiliate/register', [AffiliateController::class, 'register'])->name('affiliate.register');
 
+
+
+Route::get('/affiliate/request/{app_id}/{unique_id}', \App\AffiliatePages\AffiliateRequest::class);
+Route::get('/affiliate/register', RegsiterAffiliate::class)->name('affiliate.registerPage');

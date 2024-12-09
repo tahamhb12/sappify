@@ -27,14 +27,13 @@ class BillingEventsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
 
-
         return $table
             ->recordTitleAttribute('type')
             ->columns([
                 Tables\Columns\TextColumn::make('type_label')->label('Type'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('amount')
-                ->money(fn($record)=>$record->currencyCode),
+                    ->money(fn ($record) => $record->currencyCode),
                 Tables\Columns\TextColumn::make('billingOn')->default('No billing Date'),
                 Tables\Columns\TextColumn::make('shop.name')->searchable(),
                 Tables\Columns\TextColumn::make('isTest')->label('is Test'),

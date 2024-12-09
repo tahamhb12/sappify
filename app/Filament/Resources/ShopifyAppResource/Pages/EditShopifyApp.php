@@ -22,7 +22,7 @@ class EditShopifyApp extends EditRecord
             $this->record->description = $get_data['description'];
             $this->record->image = $get_data['image'];
             $this->record->save();
-        } elseif (!$get_data) {
+        } elseif (! $get_data) {
 
         } else {
             Notification::make()

@@ -3,9 +3,9 @@
 namespace App\Filament\Affiliate\Resources\AffiliateProgramResource\Pages;
 
 use App\Filament\Affiliate\Resources\AffiliateProgramResource;
-use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class CreateAffiliateProgram extends CreateRecord
+class ViewAffiliateProgram extends ViewRecord
 {
     protected static string $resource = AffiliateProgramResource::class;
 }

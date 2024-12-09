@@ -11,7 +11,6 @@ class Company extends Model
 
     protected $fillable = ['name', 'partner_id'];
 
-
     public function shops()
     {
         return $this->hasMany(Shop::class);

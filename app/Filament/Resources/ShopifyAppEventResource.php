@@ -3,11 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopifyAppEventResource\Pages;
-use App\Models\ShopifyApp;
 use App\Models\ShopifyAppEvent;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section as ComponentsSection;
 use Filament\Infolists\Components\TextEntry;
@@ -54,8 +51,8 @@ class ShopifyAppEventResource extends Resource
                     ->options(ShopifyAppEvent::$EVENT_TYPE_MAPPING)
                     ->multiple(),
                 SelectFilter::make('app_id')
-                ->relationship('app','name')
-                ->label('App'),
+                    ->relationship('app', 'name')
+                    ->label('App'),
                 Filter::make('occurred_at')
                     ->label('Occurred At')
                     ->form([

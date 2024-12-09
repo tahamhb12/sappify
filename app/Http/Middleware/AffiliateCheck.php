@@ -19,11 +19,11 @@ class AffiliateCheck
         if (Auth::check()) {
             $user = auth()->user();
 
-            if ($user->role=='affiliate' && $request->is('admin/*')) {
+            if ($user->role == 'affiliate' && $request->is('admin/*')) {
                 return redirect('/affiliate');
             }
 
-            if ($user->role!=='affiliate' && $request->is('affiliate')) {
+            if ($user->role !== 'affiliate' && $request->is('affiliate')) {
                 return redirect('/admin');
             }
         }

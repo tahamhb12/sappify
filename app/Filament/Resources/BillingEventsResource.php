@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BillingEventsResource\Pages;
 use App\Models\BillingEvents;
-use App\Models\ShopifyApp;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\IconEntry;
@@ -14,7 +13,6 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter as Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -48,7 +46,7 @@ class BillingEventsResource extends Resource
                 TextColumn::make('shop.name'),
                 TextColumn::make('app.name')->searchable(),
                 Tables\Columns\TextColumn::make('amount')
-                ->money(fn($record)=>$record->currencyCode),
+                    ->money(fn ($record) => $record->currencyCode),
                 TextColumn::make('billingOn')->default('No billing Date'),
                 IconColumn::make('isTest')->label('is Test')->boolean(),
                 TextColumn::make('occurred_at')->date(),
@@ -60,7 +58,7 @@ class BillingEventsResource extends Resource
                 SelectFilter::make('isTest')
                     ->options(['false', 'true']),
                 SelectFilter::make('app_id')
-                    ->relationship('app','name')
+                    ->relationship('app', 'name')
                     ->label('App'),
                 Filter::make('occurred_at')
                     ->label('Occurred At')
@@ -89,7 +87,7 @@ class BillingEventsResource extends Resource
                     TextEntry::make('type_label')->label('Type'),
                     TextEntry::make('name'),
                     TextEntry::make('amount')
-                    ->money(fn($record)=>$record->currencyCode),
+                        ->money(fn ($record) => $record->currencyCode),
                     TextEntry::make('billingOn')->default('No billing Date'),
                     TextEntry::make('shop.name'),
                     IconEntry::make('isTest')->label('is Test')->boolean(),

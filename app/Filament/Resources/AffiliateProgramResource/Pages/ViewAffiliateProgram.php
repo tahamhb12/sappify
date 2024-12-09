@@ -4,17 +4,16 @@ namespace App\Filament\Resources\AffiliateProgramResource\Pages;
 
 use App\Filament\Resources\AffiliateProgramResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditAffiliateProgram extends EditRecord
+class ViewAffiliateProgram extends ViewRecord
 {
     protected static string $resource = AffiliateProgramResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
     }
 }

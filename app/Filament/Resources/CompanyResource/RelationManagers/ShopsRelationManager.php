@@ -2,12 +2,10 @@
 
 namespace App\Filament\Resources\CompanyResource\RelationManagers;
 
-use App\Models\ShopifyAppEvent;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 
 class ShopsRelationManager extends RelationManager
@@ -32,7 +30,7 @@ class ShopsRelationManager extends RelationManager
                 Tables\Columns\ImageColumn::make('image')->default('images/shop.png')->label('Avatar')->circular(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('App')
-                    ->description(fn($record)=>$record->myshopifyDomain)
+                    ->description(fn ($record) => $record->myshopifyDomain)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tags')->default('No Tags Yet')->label('Tags')->badge(),
                 Tables\Columns\TextColumn::make('notes')->default('No notes'),
@@ -40,10 +38,10 @@ class ShopsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
-            Tables\Actions\AssociateAction::make()
-            ->preloadRecordSelect()
-            ->multiple(),
-        ])
+                Tables\Actions\AssociateAction::make()
+                    ->preloadRecordSelect()
+                    ->multiple(),
+            ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\DissociateAction::make(),

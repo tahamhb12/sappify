@@ -20,7 +20,7 @@ class ShopifyAppController extends Controller
 
     public function App()
     {
-        $app = ShopifyApp::where('app_id', '109166723073')->first();
+        $app = ShopifyApp::where('app_id', '145227776001')->first();
         $res = $this->apiservices->getData('
                 {
                     app(id: "gid://partners/App/'.$app->app_id.'"){

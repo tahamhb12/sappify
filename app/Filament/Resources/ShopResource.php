@@ -7,7 +7,6 @@ use App\Filament\Resources\ShopResource\RelationManagers\AppEventsRelationManage
 use App\Filament\Resources\ShopResource\RelationManagers\AppsRelationManager;
 use App\Filament\Resources\ShopResource\RelationManagers\BillingEventsRelationManager;
 use App\Models\Shop;
-use App\Models\ShopifyAppEvent;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -23,7 +22,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -58,7 +56,7 @@ class ShopResource extends Resource
                     ->label('Avatar')
                     ->circular(),
                 TextColumn::make('name')
-                    ->description(fn($record)=>$record->myshopifyDomain)
+                    ->description(fn ($record) => $record->myshopifyDomain)
                     ->searchable(),
                 TextColumn::make('tags')->default('No Tags Yet')->label('Tags')->badge(),
                 TextColumn::make('notes')->default('No notes'),
@@ -89,10 +87,10 @@ class ShopResource extends Resource
                 ComponentsGroup::make()->schema([
                     ComponentsSection::make('Image')->schema([
                         ImageEntry::make('image')->default('images/shop.png')
-                        ->label(false)
-                        ->size(50)
-                        ->width('100%')
-                        ->alignCenter(),
+                            ->label(false)
+                            ->size(50)
+                            ->width('100%')
+                            ->alignCenter(),
                     ])->collapsible(),
                     ComponentsSection::make()->schema([
                         TextEntry::make('name')->label('Store Name')

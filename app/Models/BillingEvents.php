@@ -29,7 +29,6 @@ class BillingEvents extends Model
         'USAGE_CHARGE_APPLIED' => 'Usage Charge Applied',
     ];
 
-
     protected $fillable = ['event_id', 'type', 'amount', 'currency', 'billingOn', 'name', 'isTest', 'app_id', 'partner_id', 'shop_id', 'occurred_at'];
 
     public function app()

@@ -9,8 +9,6 @@ class ShopifyAppEvent extends Model
 {
     use HasFactory;
 
-
-
     protected $fillable = ['occurred_at', 'type', 'app_id', 'shop_id', 'partner_id', 'description', 'reason'];
 
     public static $EVENT_TYPE_MAPPING = [

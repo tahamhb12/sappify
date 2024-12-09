@@ -16,7 +16,7 @@ class Shop extends Model
     public function apps()
     {
         return $this->belongsToMany(ShopifyApp::class, 'app_shop', 'shop_id', 'app_id')
-        ->withPivot('status');
+            ->withPivot('status');
     }
 
     public function BillingEvents()

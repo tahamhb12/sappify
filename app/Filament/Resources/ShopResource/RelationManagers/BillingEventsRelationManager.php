@@ -33,7 +33,7 @@ class BillingEventsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('type_label')->label('Type'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('amount')
-                ->money(fn($record)=>$record->currencyCode),
+                    ->money(fn ($record) => $record->currencyCode),
                 Tables\Columns\TextColumn::make('billingOn')->default('No billing Date'),
                 Tables\Columns\TextColumn::make('app.name'),
                 Tables\Columns\TextColumn::make('isTest')->label('is Test'),
