@@ -25,6 +25,7 @@ class AffiliatePanelProvider extends PanelProvider
             ->id('affiliate')
             ->path('affiliate')
             ->login()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])

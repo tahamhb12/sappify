@@ -1,16 +1,20 @@
 <?php
 
-use App\AffiliatePages\RegsiterAffiliate;
+use App\Filament\Affiliate\Pages\Profile;
+use App\Filament\Affiliate\Pages\RegisterAffiliate;
 use App\Filament\Resources\AffiliateProgramResource\Pages\AffiliateRequest;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ShopifyAppController;
 use App\Http\Controllers\ShopifyAppEventController;
+use App\Http\Middleware\AuthCheck;
+use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
-/*     Route::get('/shopify/app', [ShopifyAppController::class, 'App']);
+    });
+    Route::get('/test', [ShopifyAppController::class, 'test']);
+    /*     Route::get('/shopify/app', [ShopifyAppController::class, 'App']);
     Route::get('/shopify/test', [ShopifyAppController::class, 'test']);
 
     Route::get('/shopify/event', [ShopifyAppEventController::class, 'Events']);
@@ -25,5 +29,5 @@ Route::post('/affiliate/register', [AffiliateController::class, 'register'])->na
 
 
 
-Route::get('/affiliate/request/{app_id}/{unique_id}', \App\AffiliatePages\AffiliateRequest::class);
-Route::get('/affiliate/register', RegsiterAffiliate::class)->name('affiliate.registerPage');
+Route::get('/affiliate/request/{app_id}/{unique_id}', \App\Filament\Affiliate\Pages\AffiliateRequest::class);
+Route::get('/affiliate/register/{unique_id}', RegisterAffiliate::class)->name('affiliate.registerPage')->middleware(AuthCheck::class);

@@ -8,5 +8,7 @@
 </head>
 <body>
     <h2>hh</h2>
+    <p>{{session('message')}}</p>
+
 </body>
 </html>

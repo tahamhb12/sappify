@@ -32,6 +32,10 @@ class AdminPanelProvider extends PanelProvider
             ->registration()
             ->profile()
             ->passwordReset()
+            ->navigationGroups([
+                'Events',
+                'Affiliate',
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])

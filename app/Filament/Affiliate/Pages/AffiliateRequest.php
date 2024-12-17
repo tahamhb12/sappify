@@ -1,6 +1,6 @@
 <?php
-namespace App\AffiliatePages;
 
+namespace App\Filament\Affiliate\Pages;
 use App\Models\AffiliateProgram;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasRoutes;
@@ -15,8 +15,9 @@ class AffiliateRequest extends SimplePage
     use InteractsWithFormActions;
 
     public $affiliate_program;
+    public $unique_id;
 
-    protected static string $view = 'affiliate.request';
+    protected static string $view = 'filament.affiliate.pages.affiliate-request';
 
     public function mount($app_id, $unique_id)
     {
@@ -25,6 +26,12 @@ class AffiliateRequest extends SimplePage
             ->firstOrFail();
 
         $this->affiliate_program = $affiliate_program;
+        $this->unique_id = $unique_id;
+    }
+
+    public function redirectToAffiliateRegister()
+    {
+        return redirect("/affiliate/register/$this->unique_id");
     }
 
 

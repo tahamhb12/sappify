@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable implements FilamentUser, HasTenants
 {
@@ -41,7 +43,26 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         'email',
         'password',
         'role',
+        'referral_code'
     ];
+
+    public static function generateUniqueReferralCode(): string
+    {
+        do {
+            $referralCode = Str::upper(Str::random(8));
+        } while (self::where('referral_code', $referralCode)->exists());
+
+        return $referralCode;
+    }
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if ($user->role === 'affiliate') {
+                $user->referral_code = self::generateUniqueReferralCode();
+            }
+        });
+    }
+
 
     public function affiliatePrograms(){
         return $this->belongsToMany(AffiliateProgram::class,'affiliate_user');
@@ -50,6 +71,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     public function partners()
     {
         return $this->hasMany(Partner::class);
+    }
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class);
     }
 
     public function ShopifyApps()

@@ -34,6 +34,7 @@ class AffiliateProgramResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $user = auth()->user();
         return $table
             ->columns([
                 TextColumn::make('app.name'),
@@ -46,22 +47,18 @@ class AffiliateProgramResource extends Resource
             ])
             ->actions([
                 Action::make('Join')
-                    ->action(function ($record, $data) {
-                        $user = auth()->user(); // Get the authenticated user
-
-                        // Attach the user to the affiliate program
-                        $user->affiliatePrograms()->attach($record->id);
-
-                        // Optional: Send success notification
-                        Notification::make()
-                            ->title('joined')
-                            ->success()
-                            ->send();
-                    })
+                    ->label(fn($record) => auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists() ? 'Joined' : 'Join')
+                    ->action(fn($record) => auth()->user()->affiliatePrograms()->attach($record->id) && Notification::make()->title('Successfully Joined')->success()->send())
                     ->requiresConfirmation()
-                    ->color('success'),
+                    ->color(fn($record) => auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists() ? 'gray' : 'success')
+                    ->hidden(fn($record) => auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists()),
+                Action::make('Joined')
+                    ->label('Joined')
+                    ->color('gray')
+                    ->disabled()
+                    ->hidden(fn($record) => !auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists()),
             ])
-            ->bulkActions([
+                        ->bulkActions([
             ]);
     }
 

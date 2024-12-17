@@ -23,6 +23,10 @@ class Partner extends Model
     {
         return $this->hasMany(ShopifyApp::class);
     }
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class);
+    }
 
     public function user()
     {

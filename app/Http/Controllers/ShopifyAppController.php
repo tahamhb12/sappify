@@ -18,47 +18,12 @@ class ShopifyAppController extends Controller
         $this->apiservices = new ApiServices($partner);
     }
 
-    public function App()
+    public function test()
     {
-        $app = ShopifyApp::where('app_id', '145227776001')->first();
-        $res = $this->apiservices->getData('
-                {
-                    app(id: "gid://partners/App/'.$app->app_id.'"){
-                        events(types:[SUBSCRIPTION_CHARGE_EXPIRED]) {
-                        edges {
-                            cursor
-                            node {
-                            occurredAt
-                            type
-                            shop {
-                                avatarUrl
-                                id
-                                myshopifyDomain
-                                name
-                            }
-                            ... on SubscriptionChargeExpired {
-                                charge  {
-                                amount{
-                                    amount
-                                    currencyCode
-                                }
-                                billingOn
-                                id
-                                name
-                                test
-                                }
-                            }
-                            }
-                        }
-                        pageInfo {
-                            hasNextPage
-                            hasPreviousPage
-                        }
-                        }
-                    }
-                    }');
+        $app_id = 1;
+        $app = ShopifyApp::find(1)->first();
+        dd($app->partner->id);
 
-        return $res->json();
     }
 
     public function store()
