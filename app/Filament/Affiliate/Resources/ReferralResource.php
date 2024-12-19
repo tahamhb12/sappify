@@ -29,11 +29,10 @@ class ReferralResource extends Resource
     public static function form(Form $form): Form
     {
         $user = auth()->user();
-        $affiliatedApps = $user->affiliatePrograms()->with('app')->get();
-        $appNames = $affiliatedApps->pluck('app.name','id');
+        $affiliated_apps = $user->affiliatePrograms->pluck('app.name','id');
         return $form
             ->schema([
-                Select::make("app_id")->options($appNames)->required(),
+                Select::make("affiliate_program_id")->options($affiliated_apps)->required(),
                 TextInput::make("customer_shop")->suffix(".myshopify.com")->required(),
                 DatePicker::make("date")->required(),
                 TextInput::make("note"),
@@ -43,12 +42,24 @@ class ReferralResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->query(Referral::query()->where('is_approved', true)->where('user_id', Auth::id()))
+        ->query(Referral::query()->where('user_id', Auth::id()))
         ->columns([
-                TextColumn::make("app.name"),
                 TextColumn::make("customer_shop"),
                 TextColumn::make("date"),
                 TextColumn::make("note")->default("no notes"),
+                TextColumn::make('is_approved')->label('Status')
+                ->default('pending')
+                ->formatStateUsing(function($state){
+                    if($state == 1) return 'Approved';
+                    if($state == 0) return 'Rejected';
+                    if($state == "pending") return 'Pending';
+                })
+                ->badge()
+                ->color(fn ($state) => match ($state) {
+                    'pending' => 'warning',
+                    1 => 'success',
+                    0 => 'danger',
+                })
             ])
             ->filters([
                 //

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('referrals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('app_id')->constrained("shopify_apps")->cascadeOnDelete();
+            $table->foreignId('affiliate_program_id')->constrained("affiliate_programs")->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string(column: "customer_shop");
             $table->string("date");

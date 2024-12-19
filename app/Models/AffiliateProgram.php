@@ -20,4 +20,8 @@ class AffiliateProgram extends Model
     public function users(){
         return $this->belongsToMany(User::class,'affiliate_user');
     }
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class);
+    }
 }

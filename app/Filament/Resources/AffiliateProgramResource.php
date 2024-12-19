@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AffiliateProgramResource\Pages;
 use App\Filament\Resources\AffiliateProgramResource\RelationManagers;
+use App\Filament\Resources\AffiliateProgramResource\RelationManagers\ReferralsRelationManager;
 use App\Filament\Resources\AffiliateProgramResource\RelationManagers\UsersRelationManager;
 use App\Models\AffiliateProgram;
 use App\Models\ShopifyApp;
@@ -44,7 +45,7 @@ class AffiliateProgramResource extends Resource
         ->schema([
             Select::make('app_id')
                 ->relationship('app', 'name', function ($query) {
-                    $usedAppIds = \App\Models\Referral::pluck('app_id')->toArray();
+                    $usedAppIds = \App\Models\AffiliateProgram::pluck('app_id')->toArray();
                     $query->whereNotIn('id', $usedAppIds);
                 })
                 ->label('App')
@@ -59,13 +60,8 @@ class AffiliateProgramResource extends Resource
                 ->label('App URL'),
             TextInput::make('amount_per_install')->numeric()->suffixIcon('heroicon-o-currency-dollar')->maxValue(10),
             TextInput::make('commission_rate')->numeric()->suffixIcon('heroicon-o-percent-badge')->maxValue(50),
-            Select::make('min_payout')
-            ->options(['20'=>'20',
-                '40'=>'40',
-                '60'=>'60',
-                '80'=>'80',
-                '100'=>'100'])
-            ->suffixIcon('heroicon-o-currency-dollar'),
+            TextInput::make('min_payout')
+            ->suffixIcon('heroicon-o-currency-dollar')->numeric()->maxLength(3)->maxValue(100),
         ]);
     }
 
@@ -127,7 +123,8 @@ class AffiliateProgramResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UsersRelationManager::class
+            UsersRelationManager::class,
+            ReferralsRelationManager::class
         ];
     }
 

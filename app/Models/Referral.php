@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Referral extends Model
 {
-    protected $fillable = ["app_id","user_id","note","customer_shop","date","is_approved"];
+    protected $fillable = ["affiliate_program_id","user_id","note","customer_shop","date","is_approved"];
 
     protected static function booted()
     {
@@ -23,7 +23,7 @@ class Referral extends Model
     public function partner(){
         return $this->belongsTo(Partner::class);
     }
-    public function app(){
-        return $this->belongsTo(ShopifyApp::class);
+    public function affiliateProgram(){
+        return $this->belongsTo(AffiliateProgram::class);
     }
 }

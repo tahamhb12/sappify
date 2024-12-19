@@ -25,10 +25,6 @@ class ShopifyApp extends Model
     {
         return $this->belongsTo(Partner::class);
     }
-    public function referral()
-    {
-        return $this->hasMany(Referral::class);
-    }
 
     public function AppEvents()
     {

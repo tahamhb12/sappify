@@ -43,7 +43,7 @@ class RegisterAffiliate extends SimplePage implements HasForms
         return $form
             ->schema([
                 TextInput::make('name')->required(),
-                TextInput::make('email')->required()->unique()->email()->label("Email Adress"),
+                TextInput::make('email')->unique()->required()->email()->label("Email Adress"),
                 TextInput::make('password')->required()->password()->revealable(),
                 TextInput::make('password_confirmation')->required()->same("password")->password()->revealable(),
             ])->statePath('data');

@@ -46,19 +46,8 @@ class AffiliateProgramResource extends Resource
                 //
             ])
             ->actions([
-                Action::make('Join')
-                    ->label(fn($record) => auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists() ? 'Joined' : 'Join')
-                    ->action(fn($record) => auth()->user()->affiliatePrograms()->attach($record->id) && Notification::make()->title('Successfully Joined')->success()->send())
-                    ->requiresConfirmation()
-                    ->color(fn($record) => auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists() ? 'gray' : 'success')
-                    ->hidden(fn($record) => auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists()),
-                Action::make('Joined')
-                    ->label('Joined')
-                    ->color('gray')
-                    ->disabled()
-                    ->hidden(fn($record) => !auth()->user()->affiliatePrograms()->where('affiliate_program_id', $record->id)->exists()),
             ])
-                        ->bulkActions([
+            ->bulkActions([
             ]);
     }
 
