@@ -50,4 +50,7 @@ class BillingEvents extends Model
     {
         return self::$EVENT_TYPE_MAPPING[$this->type];
     }
+    public function earnings(){
+        return $this->hasMany(Earning::class);
+    }
 }

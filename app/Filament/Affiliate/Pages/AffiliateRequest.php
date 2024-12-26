@@ -31,7 +31,7 @@ class AffiliateRequest extends SimplePage
 
     public function redirectToAffiliateRegister()
     {
-        return redirect("/affiliate/register/$this->unique_id");
+        return redirect("/affiliate/register");
     }
 
 

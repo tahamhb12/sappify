@@ -47,6 +47,7 @@ class ReferralResource extends Resource
                 TextColumn::make("customer_shop"),
                 TextColumn::make("date"),
                 TextColumn::make("note")->default("no notes"),
+                TextColumn::make("affiliateProgram.app.name"),
                 TextColumn::make('is_approved')->label('Status')
                 ->default('pending')
                 ->formatStateUsing(function($state){

@@ -30,4 +30,4 @@ Route::post('/affiliate/register', [AffiliateController::class, 'register'])->na
 
 
 Route::get('/affiliate/request/{app_id}/{unique_id}', \App\Filament\Affiliate\Pages\AffiliateRequest::class);
-Route::get('/affiliate/register/{unique_id}', RegisterAffiliate::class)->name('affiliate.registerPage')->middleware(AuthCheck::class);
+Route::get('/affiliate/register', RegisterAffiliate::class)->name('affiliate.registerPage')->middleware(AuthCheck::class);

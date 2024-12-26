@@ -210,8 +210,8 @@ class ApiServices
 
     public function getEvents($shopify_app)
     {
-        $this->getAppEvents($shopify_app);
         $this->getBillingEvents($shopify_app);
+        $this->getAppEvents($shopify_app);
     }
 
     public function checkPartner()

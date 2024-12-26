@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\AffiliateProgramResource\RelationManagers;
 
+use App\Models\BillingEvents;
+use App\Models\Earning;
+use App\Models\Shop;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -66,6 +69,12 @@ class ReferralsRelationManager extends RelationManager
                 ->color('success')
                 ->visible(fn($record) => $record->is_approved === null)
                 ->action(function ($record) {
+                    $amount_per_install = (int) $record->affiliateProgram->amount_per_install;
+                    Earning::create([
+                        'user_id' => $record->user_id,
+                        'earnings' => $amount_per_install,
+                        'type' => 'install',
+                    ]);
                     $record->update(['is_approved' => true]);
                 }),
                 Action::make("Reject")

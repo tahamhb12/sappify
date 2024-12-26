@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\ShopifyAppEvent;
+use Filament\Facades\Filament;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
@@ -30,10 +31,10 @@ class InstallsChartWidget extends ChartWidget
 
     protected function getData(): array
     {
-        $activeFilter = $this->filter;
-        $selectedApp = $this->filters['App'] ?? null;
+        $active_filter = $this->filter;
+        $selected_app = $this->filters['App'] ?? null;
 
-        $start = match ($activeFilter) {
+        $start = match ($active_filter) {
             'today' => now()->subDay(),
             'week' => now()->subWeek(),
             'month' => now()->subMonth(),
@@ -42,8 +43,9 @@ class InstallsChartWidget extends ChartWidget
         };
 
         $query = ShopifyAppEvent::query()
-            ->when($selectedApp, fn ($query) => $query->where('app_id', $selectedApp))
-            ->where('type', 'RELATIONSHIP_INSTALLED');
+            ->when($selected_app, fn ($query) => $query->where('app_id', $selected_app))
+            ->where('type', 'RELATIONSHIP_INSTALLED')
+            ->where('partner_id',Filament::getTenant()->id);
 
         $data = Trend::query($query)
             ->between(start: $start, end: now())

@@ -64,9 +64,6 @@ class AffiliateProgramResource extends Resource
                                 return "<div style='position:relative;left:47px; bottom:55px;font-weight:bold;'>$state</div>
                             <div style='position:relative; bottom:40px;'>Sing up now to start earning $record->commission_rate% for life</div>";
                             })->html(),
-                        /*                         TextEntry::make("commission_rate")->label(false)
-                        ->formatStateUsing(fn ($state, $record) => "<button style='background-color:black;padding:10px;color:white;border-radius:12px;margin-top:-30px;font-weight:bold;'>Become an affiliate</button>")
-                        ->html(), */
                     ])->collapsible(),
                 ])->columnSpan(3),
                 Section::make()->schema([

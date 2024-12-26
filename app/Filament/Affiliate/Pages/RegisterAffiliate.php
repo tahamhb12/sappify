@@ -30,20 +30,13 @@ class RegisterAffiliate extends SimplePage implements HasForms
 
     protected static string $view = 'filament.affiliate.pages.register-affiliate';
 
-    public function mount($unique_id)
-    {
-        $affiliate_program = AffiliateProgram::where('unique_id', $unique_id)
-            ->firstOrFail();
-
-        $this->affiliate_program =$affiliate_program;
-    }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')->required(),
-                TextInput::make('email')->unique()->required()->email()->label("Email Adress"),
+                TextInput::make('email')->required()->email()->label("Email Adress")->unique(table: User::class, column: 'email'),
                 TextInput::make('password')->required()->password()->revealable(),
                 TextInput::make('password_confirmation')->required()->same("password")->password()->revealable(),
             ])->statePath('data');

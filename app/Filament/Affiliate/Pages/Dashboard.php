@@ -2,6 +2,8 @@
 
 namespace App\Filament\Affiliate\Pages;
 
+use App\Filament\Affiliate\Widgets\AffiliatedApps;
+use App\Filament\Affiliate\Widgets\StatsOverview;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -11,16 +13,17 @@ use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasFiltersForm;
+    public function getWidgets(): array
+    {
+        return [
+            StatsOverview::class,
+            AffiliatedApps::class
+        ];
+    }
 
     public function filtersForm(Form $form): Form
     {
-        $partner = Filament::getTenant();
-
         return $form->schema([
-            Section::make('')->schema([
-                DatePicker::make('StartDate'),
-                DatePicker::make('EndDate'),
-            ])->columns(3),
         ]);
     }
 }

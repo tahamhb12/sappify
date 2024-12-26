@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained('users');
             $table->string('earnings');
+            $table->string('type');
+            $table->foreignId('billing_event_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
