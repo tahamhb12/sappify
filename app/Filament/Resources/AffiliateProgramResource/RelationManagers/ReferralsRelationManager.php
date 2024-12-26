@@ -59,7 +59,7 @@ class ReferralsRelationManager extends RelationManager
             ])
             ->filters([
                 SelectFilter::make('is_approved')
-                ->options([1=>"Approved",0=>'Rejected','null'=>"null"])
+                ->options([1=>"Approved",0=>'Rejected'])
                 ->label('Status')
                 ->multiple(),
 
