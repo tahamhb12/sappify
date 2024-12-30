@@ -58,8 +58,8 @@ class AffiliateProgramResource extends Resource
                 ),
             TextInput::make('app_url')
                 ->label('App URL'),
-            TextInput::make('amount_per_install')->numeric()->suffixIcon('heroicon-o-currency-dollar')->maxValue(10),
-            TextInput::make('commission_rate')->numeric()->suffixIcon('heroicon-o-percent-badge')->maxValue(50),
+            TextInput::make('amount_per_install')->numeric()->suffixIcon('heroicon-o-currency-dollar')->maxValue(100),
+            TextInput::make('commission_rate')->numeric()->suffixIcon('heroicon-o-percent-badge')->maxValue(100),
             TextInput::make('min_payout')
             ->suffixIcon('heroicon-o-currency-dollar')->numeric()->maxLength(3)->maxValue(100),
         ]);
