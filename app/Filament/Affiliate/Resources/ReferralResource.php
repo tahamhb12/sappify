@@ -32,7 +32,7 @@ class ReferralResource extends Resource
         $affiliated_apps = $user->affiliatePrograms->pluck('app.name','id');
         return $form
             ->schema([
-                Select::make("affiliate_program_id")->options($affiliated_apps)->required(),
+                Select::make("affiliate_program_id")->options($affiliated_apps)->required()->label("Affiliate Program"),
                 TextInput::make("customer_shop")->suffix(".myshopify.com")->required(),
                 DatePicker::make("date")->required(),
                 TextInput::make("note"),
