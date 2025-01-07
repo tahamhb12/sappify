@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AffiliateProgramResource\Pages;
 use App\Filament\Resources\AffiliateProgramResource\RelationManagers;
+use App\Filament\Resources\AffiliateProgramResource\RelationManagers\PayoutsRelationManager;
 use App\Filament\Resources\AffiliateProgramResource\RelationManagers\ReferralsRelationManager;
 use App\Filament\Resources\AffiliateProgramResource\RelationManagers\UsersRelationManager;
 use App\Models\AffiliateProgram;
@@ -121,7 +122,8 @@ class AffiliateProgramResource extends Resource
     {
         return [
             UsersRelationManager::class,
-            ReferralsRelationManager::class
+            ReferralsRelationManager::class,
+            PayoutsRelationManager::class
         ];
     }
 

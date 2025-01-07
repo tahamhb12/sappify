@@ -24,4 +24,8 @@ class AffiliateProgram extends Model
     {
         return $this->hasMany(Referral::class);
     }
+
+    public function payouts(){
+        return $this->hasMany(Payout::class);
+    }
 }

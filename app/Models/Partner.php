@@ -42,4 +42,8 @@ class Partner extends Model
     {
         return $this->hasMany(AffiliateProgram::class);
     }
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class);
+    }
 }

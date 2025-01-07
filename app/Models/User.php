@@ -76,6 +76,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->hasMany(Referral::class);
     }
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class);
+    }
 
     public function ShopifyApps()
     {
