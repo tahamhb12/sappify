@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string(column: "customer_shop");
             $table->string("date");
             $table->string("note")->nullable();
-            $table->boolean("is_approved")->nullable();
+            $table->enum("status",["pending","approved","rejected"])->default("pending");
             $table->foreignId('partner_id')->nullable()->references('id')->on('partners')->cascadeOnDelete();
             $table->timestamps();
         });

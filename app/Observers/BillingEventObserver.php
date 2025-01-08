@@ -15,7 +15,7 @@ class BillingEventObserver
     public function created(BillingEvents $billingEvent): void
     {
 /*                 $referral = Referral::where('customer_shop', $billingEvent->shop->myshopifyDomain)
-                ->where('is_approved', true)
+                ->where('status', 'approved')
                 ->first();
 
             if ($referral) {
@@ -28,7 +28,7 @@ class BillingEventObserver
                 );
             } */
             $referrals = Referral::where('customer_shop', $billingEvent->shop->myshopifyDomain)
-            ->where('is_approved', true)
+            ->where('status', 'approved')
             ->get();
 
         if ($referrals->isNotEmpty()) {

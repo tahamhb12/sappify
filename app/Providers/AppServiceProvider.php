@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Models\BillingEvents;
+use App\Models\Payout;
+use App\Models\Referral;
 use App\Observers\BillingEventObserver;
+use App\Observers\PayoutObserver;
+use App\Observers\ReferralObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,5 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         BillingEvents::observe(BillingEventObserver::class);
+        Referral::observe(ReferralObserver::class);
+        Payout::observe(PayoutObserver::class);
     }
 }

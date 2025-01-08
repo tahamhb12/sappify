@@ -30,7 +30,7 @@ class ReferralsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Select::make("is_approved")->options([1=>"Approved",0=>"Rejected"])
+                Select::make("status")->options([1=>"Approved",0=>"Rejected"])
             ]);
     }
 
@@ -43,31 +43,30 @@ class ReferralsRelationManager extends RelationManager
                 TextColumn::make("date")->date(),
                 TextColumn::make("note")->default("no notes"),
                 TextColumn::make("user.name")->searchable(),
-                TextColumn::make('is_approved')->label('Status')
-                ->default('pending')
-                ->formatStateUsing(function($state){
-                    if($state == 1) return 'Approved';
-                    if($state == 0) return 'Rejected';
-                    if($state == "pending") return 'Pending';
-                })
-                ->badge()
-                ->color(fn ($state) => match ($state) {
-                    'pending' => 'warning',
-                    1 => 'success',
-                    0 => 'danger',
-                })
+                TextColumn::make("status")
+                    ->formatStateUsing(function ($state) {
+                        if ($state == "approved") return 'Approved';
+                        if ($state == "rejected") return 'Rejected';
+                        if ($state == "pending") return 'Pending';
+                    })
+                    ->badge()
+                    ->color(fn ($state) => match ($state) {
+                        'pending' => 'warning',
+                        "approved" => 'success',
+                        "rejected" => 'danger',
+                    })
             ])
             ->filters([
-                SelectFilter::make('is_approved')
-                ->options([1=>"Approved",0=>'Rejected'])
-                ->label('Status')
-                ->multiple(),
-
+                SelectFilter::make("status")->options([
+                    "pending" => "pending",
+                    "approved" => "approved",
+                    "rejected" => "rejected",
+                ])->multiple()
             ])
             ->actions([
                 Action::make("Accept")
                 ->color('success')
-                ->visible(fn($record) => $record->is_approved === null)
+                ->visible(fn($record) => $record->status === 'pending')
                 ->action(function ($record) {
                     $amount_per_install = (int) $record->affiliateProgram->amount_per_install;
                     Earning::create([
@@ -75,13 +74,13 @@ class ReferralsRelationManager extends RelationManager
                         'earnings' => $amount_per_install,
                         'type' => 'install',
                     ]);
-                    $record->update(['is_approved' => true]);
+                    $record->update(['status' => 'approved']);
                 }),
                 Action::make("Reject")
                 ->color("danger")
-                ->visible(fn($record) => $record->is_approved === null)
+                ->visible(fn($record) => $record->status === 'pending')
                 ->action(function ($record) {
-                    $record->update(['is_approved' => false]);
+                    $record->update(['status' => 'rejected']);
                 }),
 
 

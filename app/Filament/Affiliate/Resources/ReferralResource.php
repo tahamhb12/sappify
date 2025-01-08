@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -48,22 +49,25 @@ class ReferralResource extends Resource
                 TextColumn::make("date"),
                 TextColumn::make("note")->default("no notes"),
                 TextColumn::make("affiliateProgram.app.name")->label("Program"),
-                TextColumn::make('is_approved')->label('Status')
-                ->default('pending')
-                ->formatStateUsing(function($state){
-                    if($state == 1) return 'Approved';
-                    if($state == 0) return 'Rejected';
-                    if($state == "pending") return 'Pending';
-                })
-                ->badge()
-                ->color(fn ($state) => match ($state) {
-                    'pending' => 'warning',
-                    1 => 'success',
-                    0 => 'danger',
-                })
+                TextColumn::make("status")
+                    ->formatStateUsing(function ($state) {
+                        if ($state == "approved") return 'Approved';
+                        if ($state == "rejected") return 'Rejected';
+                        if ($state == "pending") return 'Pending';
+                    })
+                    ->badge()
+                    ->color(fn ($state) => match ($state) {
+                        'pending' => 'warning',
+                        "approved" => 'success',
+                        "rejected" => 'danger',
+                    })
             ])
             ->filters([
-                //
+                SelectFilter::make("status")->options([
+                    "pending" => "pending",
+                    "approved" => "approved",
+                    "rejected" => "rejected",
+                ])->multiple()
             ])
             ->actions([
                 // Tables\Actions\ViewAction::make(),

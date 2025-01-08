@@ -48,6 +48,7 @@ class AffiliatePanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
                 AffiliateCheck::class,
             ])
+            ->databaseNotifications()
             ->authMiddleware([
                 Authenticate::class,
             ]);

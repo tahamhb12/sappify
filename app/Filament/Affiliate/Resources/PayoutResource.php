@@ -69,7 +69,7 @@ class PayoutResource extends Resource
                     "pending" => "pending",
                     "approved" => "approved",
                     "rejected" => "rejected",
-                ])
+                ])->multiple()
 
             ])
             ->actions([

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Referral extends Model
 {
-    protected $fillable = ["affiliate_program_id","user_id","note","customer_shop","date","is_approved"];
+    protected $fillable = ["affiliate_program_id","user_id","note","customer_shop","date","status"];
 
     protected static function booted()
     {

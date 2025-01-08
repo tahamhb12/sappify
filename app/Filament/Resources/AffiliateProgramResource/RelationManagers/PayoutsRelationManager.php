@@ -54,7 +54,7 @@ class PayoutsRelationManager extends RelationManager
                     "pending" => "pending",
                     "approved" => "approved",
                     "rejected" => "rejected",
-                ])
+                ])->multiple()
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
