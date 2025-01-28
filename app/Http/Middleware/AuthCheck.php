@@ -16,9 +16,6 @@ class AuthCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::check()){
-            return $next($request);
-        }
-        return redirect("/affiliate");
+        return redirect("/admin");
     }
 }
