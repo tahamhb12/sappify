@@ -7,20 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReferralRequest extends Notification
+class PayoutRejected extends Notification
 {
     use Queueable;
-
-    public $partner_id;
-    public $program_id;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($partner_id,$program_id)
+    public function __construct()
     {
-        $this->partner_id = $partner_id;
-        $this->program_id = $program_id;
+        //
     }
 
     /**
@@ -39,8 +35,8 @@ class ReferralRequest extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('New Referral Request.')
-                    ->action('View Referrals', url("/admin/$this->partner_id/affiliate-programs/$this->program_id"))
+                    ->line('Payout Request Declined.')
+                    ->action('View Payouts', url('/affiliate/payouts'))
                     ->line('Thank you for using our application!');
     }
 

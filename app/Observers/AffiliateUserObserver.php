@@ -5,8 +5,11 @@ namespace App\Observers;
 use App\Models\AffiliateProgram;
 use App\Models\AffiliateUser;
 use App\Models\User;
+use App\Notifications\AffiliateJoined;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Notification as LaravelNotification;
+
 
 class AffiliateUserObserver
 {
@@ -17,11 +20,14 @@ class AffiliateUserObserver
     {
         $program = AffiliateProgram::find($affiliateUser->affiliate_program_id);
         $recepient = $program->partner->user;
+        $partner = $program->partner;
         Notification::make()
             ->title('New Affiliate Joined')
             ->body("A new Affiliate joined " . $program->app->name)
             ->info()
             ->sendToDatabase($recepient);
+        LaravelNotification::send($recepient, new AffiliateJoined($program->id,$partner->id));
+
     }
 
     /**

@@ -26,6 +26,9 @@ class AffiliateCheck
             if ($user->role !== 'affiliate' && $request->is('affiliate')) {
                 return redirect('/admin');
             }
+            if ($user->role !== 'affiliate' && $request->is('affiliate/*')) {
+                return redirect('/admin');
+            }
         }
 
         return $next($request);

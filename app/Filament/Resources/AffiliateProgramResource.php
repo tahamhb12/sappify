@@ -59,13 +59,13 @@ class AffiliateProgramResource extends Resource
                     $slug_name = Str::slug($app_name);
                     return $set('app_url',"https://apps.shopify.com/$slug_name");
                 }
-                ),
+                )->required(),
             TextInput::make('app_url')
-                ->label('App URL'),
-            TextInput::make('amount_per_install')->numeric()->suffixIcon('heroicon-o-currency-dollar')->maxValue(100),
-            TextInput::make('commission_rate')->numeric()->suffixIcon('heroicon-o-percent-badge')->maxValue(100),
-            TextInput::make('min_payout')
-            ->suffixIcon('heroicon-o-currency-dollar')->numeric()->maxLength(3)->maxValue(100),
+                ->label('App URL')->required(),
+            TextInput::make('amount_per_install')->numeric()->suffixIcon('heroicon-o-currency-dollar')->maxValue(100)->required(),
+            TextInput::make('commission_rate')->numeric()->suffixIcon('heroicon-o-percent-badge')->maxValue(100)->required(),
+            TextInput::make('min_payout')->required()
+            ->suffixIcon('heroicon-o-currency-dollar')->numeric()->maxLength(3)->maxValue(100)->required(),
         ]);
     }
 

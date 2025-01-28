@@ -3,8 +3,13 @@
 namespace App\Observers;
 
 use App\Models\Payout;
+use App\Notifications\PayoutAccepted;
+use App\Notifications\PayoutRejected;
+use App\Notifications\PayoutRequest;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Notification as LaravelNotification;
+
 
 class PayoutObserver
 {
@@ -29,7 +34,7 @@ class PayoutObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
-            // mail
+            LaravelNotification::send($recepient, new PayoutRequest($partner->id,$program_id));
 
     }
 
@@ -51,6 +56,7 @@ class PayoutObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
+            LaravelNotification::send($recepient, new PayoutAccepted());
         }else if($payout->status == 'rejected'){
             Notification::make()
             ->title('Payout Request Declined')
@@ -63,6 +69,7 @@ class PayoutObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
+            LaravelNotification::send($recepient, new PayoutRejected());
         }
     }
 

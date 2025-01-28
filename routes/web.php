@@ -14,13 +14,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-    });
-    Route::get('/test', [ShopifyAppController::class, 'test']);
-    /*     Route::get('/shopify/app', [ShopifyAppController::class, 'App']);
-    Route::get('/shopify/test', [ShopifyAppController::class, 'test']);
-
-    Route::get('/shopify/event', [ShopifyAppEventController::class, 'Events']);
-    Route::get('/shopify/event/store', [ShopifyAppEventController::class, 'store']); */
+    })->middleware(AuthCheck::class);
+// Route::get('/test', [ShopifyAppController::class, 'test']);
+/*     Route::get('/shopify/app', [ShopifyAppController::class, 'App']);
+Route::get('/shopify/test', [ShopifyAppController::class, 'test']);
+Route::get('/shopify/event', [ShopifyAppEventController::class, 'Events']);
+Route::get('/shopify/event/store', [ShopifyAppEventController::class, 'store']); */
 
 Route::fallback(function () {
     return redirect('/admin');
@@ -29,14 +28,6 @@ Route::fallback(function () {
  */
 Route::post('/affiliate/register', [AffiliateController::class, 'register'])->name('affiliate.register');
 
-
-
 Route::get('/affiliate/request/{app_id}/{unique_id}', \App\Filament\Affiliate\Pages\AffiliateRequest::class);
 Route::get('/affiliate/register', RegisterAffiliate::class)->name('affiliate.registerPage')->middleware(AuthCheck::class);
 
-
-Route::get('/test-notification', function () {
-    $user = User::first();
-    $user->notify(new ReferralRequest('Test Partner', url('/test')));
-    return 'Notification sent!';
-});

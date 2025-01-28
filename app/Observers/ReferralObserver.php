@@ -7,6 +7,8 @@ use App\Filament\Resources\AffiliateProgramResource;
 use App\Models\AffiliateProgram;
 use App\Models\Referral;
 use App\Models\User;
+use App\Notifications\ReferralAccepted;
+use App\Notifications\ReferralRejected;
 use App\Notifications\ReferralRequest;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
@@ -35,6 +37,7 @@ class ReferralObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
+            LaravelNotification::send($recepient, new ReferralRequest($partner->id,$program_id));
 
 
     }
@@ -57,6 +60,7 @@ class ReferralObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
+            LaravelNotification::send($recepient, new ReferralAccepted());
         }else if($referral->status == 'rejected'){
             Notification::make()
             ->title('Referral Request Declined')
@@ -69,6 +73,7 @@ class ReferralObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
+            LaravelNotification::send($recepient, new ReferralRejected());
         }
     }
 
