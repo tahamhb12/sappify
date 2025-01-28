@@ -6,6 +6,7 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
+use Filament\Panel\Concerns\HasNotifications;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +18,8 @@ use Illuminate\Support\Str;
 class User extends Authenticatable implements FilamentUser, HasTenants
 {
     use HasFactory, Notifiable;
+    use HasNotifications;
+
 
     public function getTenants(Panel $panel): Collection
     {
@@ -65,7 +68,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
 
     public function affiliatePrograms(){
-        return $this->belongsToMany(AffiliateProgram::class,'affiliate_user');
+        return $this->belongsToMany(AffiliateProgram::class,'affiliate_user')->using(AffiliateUser::class);
     }
 
     public function partners()

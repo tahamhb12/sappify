@@ -28,7 +28,6 @@ class ShopifyAppController extends Controller
 
     public function store()
     {
-        $this->App();
         $appData = $this->responseData;
         $app = ShopifyApp::create([
             'name' => $appData['app']['name'],

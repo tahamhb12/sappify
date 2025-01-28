@@ -29,6 +29,8 @@ class PayoutObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
+            // mail
+
     }
 
     /**
@@ -49,7 +51,7 @@ class PayoutObserver
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase($recepient);
-        }else{
+        }else if($payout->status == 'rejected'){
             Notification::make()
             ->title('Payout Request Declined')
             ->body("A payout has been Declined.")

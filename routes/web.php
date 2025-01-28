@@ -7,6 +7,8 @@ use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ShopifyAppController;
 use App\Http\Controllers\ShopifyAppEventController;
 use App\Http\Middleware\AuthCheck;
+use App\Models\User;
+use App\Notifications\ReferralRequest;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -31,3 +33,10 @@ Route::post('/affiliate/register', [AffiliateController::class, 'register'])->na
 
 Route::get('/affiliate/request/{app_id}/{unique_id}', \App\Filament\Affiliate\Pages\AffiliateRequest::class);
 Route::get('/affiliate/register', RegisterAffiliate::class)->name('affiliate.registerPage')->middleware(AuthCheck::class);
+
+
+Route::get('/test-notification', function () {
+    $user = User::first();
+    $user->notify(new ReferralRequest('Test Partner', url('/test')));
+    return 'Notification sent!';
+});

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\AffiliateUser;
 use App\Models\BillingEvents;
 use App\Models\Payout;
 use App\Models\Referral;
+use App\Observers\AffiliateUserObserver;
 use App\Observers\BillingEventObserver;
 use App\Observers\PayoutObserver;
 use App\Observers\ReferralObserver;
@@ -28,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         BillingEvents::observe(BillingEventObserver::class);
         Referral::observe(ReferralObserver::class);
         Payout::observe(PayoutObserver::class);
+        AffiliateUser::observe(AffiliateUserObserver::class);
     }
 }

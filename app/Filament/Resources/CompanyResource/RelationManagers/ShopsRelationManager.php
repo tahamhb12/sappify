@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CompanyResource\RelationManagers;
 
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -39,8 +40,10 @@ class ShopsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
                 Tables\Actions\AssociateAction::make()
-                    ->preloadRecordSelect()
-                    ->multiple(),
+                ->recordSelectOptionsQuery(function (\Illuminate\Database\Eloquent\Builder $query) {
+                    return $query->where('partner_id', Filament::getTenant()->id);
+                })
+                ->multiple(),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),

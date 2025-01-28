@@ -9,6 +9,7 @@ use App\Filament\Resources\AffiliateProgramResource\RelationManagers\ReferralsRe
 use App\Filament\Resources\AffiliateProgramResource\RelationManagers\UsersRelationManager;
 use App\Models\AffiliateProgram;
 use App\Models\ShopifyApp;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -47,7 +48,9 @@ class AffiliateProgramResource extends Resource
             Select::make('app_id')
                 ->relationship('app', 'name', function ($query) {
                     $used_app_ids = \App\Models\AffiliateProgram::pluck('app_id')->toArray();
-                    $query->whereNotIn('id', $used_app_ids);
+                    $query->whereNotIn('id', $used_app_ids)
+                    ->where('partner_id', Filament::getTenant()->id);
+                    ;
                 })
                 ->label('App')
                 ->reactive()

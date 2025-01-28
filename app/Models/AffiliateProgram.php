@@ -18,7 +18,7 @@ class AffiliateProgram extends Model
         return $this->belongsTo(Partner::class);
     }
     public function users(){
-        return $this->belongsToMany(User::class,'affiliate_user');
+        return $this->belongsToMany(User::class,'affiliate_user')->using(AffiliateUser::class);
     }
     public function referrals()
     {
