@@ -1,11 +1,12 @@
 This application is built to help Shopify Partners gain insights into their shops, apps, billing events, and app events. Built on Laravel, it provides a streamlined interface to manage and view key metrics in one place.
 
-## Features
+## Features  
 
-- **Shops Management**: View and manage insights about different shops.
-- **App Management**: Track apps associated with each shop.
-- **Billing Events**: Monitor billing events and maintain financial records.
-- **App Events**: Keep track of all app events for each shop.
+- **Shops Management** – View and manage insights about different shops.  
+- **App Management** – Track apps associated with each shop.  
+- **Billing Events** – Monitor billing events and maintain financial records.  
+- **App Events** – Keep track of all app events for each shop.  
+- **Affiliate Program** – Manage and track affiliate referrals and commissions.  
 
 ## Getting Started
 
@@ -55,8 +56,16 @@ Ensure you have the following installed on your system:
     ```bash
     composer require flowframe/laravel-trend
     ```
+    
+6. **Start MailDev (for local email testing)**:
 
-6. **Run the Server**:
+    Run the following command to start MailDev:  
+    
+    ```sh
+    maildev
+    ```  
+
+7. **Run the Server**:
     ```bash
     php artisan serve
     ```
