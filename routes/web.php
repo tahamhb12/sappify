@@ -26,8 +26,7 @@ Route::fallback(function () {
 });
 /* Route::get('/affiliate/request/{app_id}/{unique_id}', [AffiliateController::class, 'showAffiliateRequest']);
  */
-Route::post('/affiliate/register', [AffiliateController::class, 'register'])->name('affiliate.register');
 
 Route::get('/affiliate/request/{app_id}/{unique_id}', \App\Filament\Affiliate\Pages\AffiliateRequest::class);
-Route::get('/affiliate/register', RegisterAffiliate::class)->name('affiliate.registerPage')->middleware(AuthCheck::class);
+Route::get('/affiliate/register', RegisterAffiliate::class)->name('affiliate.registerPage');
 
