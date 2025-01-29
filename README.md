@@ -70,5 +70,8 @@ Ensure you have the following installed on your system:
     php artisan serve
     ```
 
-The application should now be accessible at [http://localhost:8000](http://localhost:8000).
+The application should now be accessible at http://127.0.0.1:8000.
+You can access the MailDev web interface at http://localhost:1080.
+
+
 
