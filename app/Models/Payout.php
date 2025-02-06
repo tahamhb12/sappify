@@ -14,8 +14,8 @@ class Payout extends Model
     protected static function booted()
     {
 
-        static::creating(function ($referral) {
-            $referral->user_id = Auth::id();
+        static::creating(function ($payout) {
+            $payout->user_id = Auth::id();
         });
     }
 
